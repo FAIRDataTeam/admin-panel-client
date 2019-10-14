@@ -1,0 +1,20 @@
+.dropdown-item .svg-inline--fa {
+    margin-right: .5rem;
+}
+
+.btn .svg-inline--fa {
+    margin-right: .25rem;
+}
+
+.dropdown-item-danger a {
+    color: #dc3545 !important;
+}
+
+.link-muted {
+    color: #212529;
+    text-decoration: underline;
+}
+
+.table td {
+    vertical-align: middle;
+}
