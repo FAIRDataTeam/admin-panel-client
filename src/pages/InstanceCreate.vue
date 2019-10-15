@@ -29,10 +29,10 @@
 
                 <div class="form-group">
                     <label>Application Template</label>
-                    <select class="form-control" v-model="$v.instance.variables.application_uuid.$model" v-bind:class="{'is-invalid': $v.instance.variables.application_uuid.$error}">
+                    <select class="form-control" v-model="$v.instance.applicationUuid.$model" v-bind:class="{'is-invalid': $v.instance.applicationUuid.$error}">
                         <option v-for="application in applications" v-bind:key="application.uuid" v-bind:value="application.uuid">{{application.name}}</option>
                     </select>
-                    <p class="invalid-feedback" v-if="!$v.instance.variables.application_uuid.required">Field is required</p>
+                    <p class="invalid-feedback" v-if="!$v.instance.applicationUuid.required">Field is required</p>
                 </div>
 
                 <div class="form-group">
@@ -47,10 +47,10 @@
 
                 <div class="form-group">
                     <label>Server</label>
-                    <select class="form-control" v-model="$v.instance.variables.server_uuid.$model" v-bind:class="{'is-invalid': $v.instance.variables.server_uuid.$error}">
+                    <select class="form-control" v-model="$v.instance.serverUuid.$model" v-bind:class="{'is-invalid': $v.instance.serverUuid.$error}">
                         <option v-for="server in servers" v-bind:key="server.uuid" v-bind:value="server.uuid">{{server.name}}</option>
                     </select>
-                    <p class="invalid-feedback" v-if="!$v.instance.variables.server_uuid.required">Field is required</p>
+                    <p class="invalid-feedback" v-if="!$v.instance.serverUuid.required">Field is required</p>
                 </div>
 
                 <div class="form-group">
@@ -261,9 +261,9 @@ export default {
             name: { required },
             url: { required },
             path: { required },
+            applicationUuid: { required },
+            serverUuid: { required },
             variables: {
-                application_uuid: { required },
-                server_uuid: { required },
                 server_port: { required },
                 server_image: { required },
                 jwt_secret: { required },
@@ -302,9 +302,9 @@ export default {
               name: '',
               url: '',
               path: '',
+              applicationUuid: '',
+              serverUuid: '',
               variables: {
-                application_uuid: '',
-                server_uuid: '',
                 server_port: '',
                 jwt_secret: '',
                 repository_type: 1,

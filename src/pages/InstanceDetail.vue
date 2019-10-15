@@ -57,7 +57,7 @@
 
                 <div class="form-group">
                     <label>Application Template</label>
-                    <select v-model="instance.variables.application_uuid" v-bind:class="{'form-control': editing, 'form-control-plaintext': !editing}" :disabled="!editing">
+                    <select v-model="instance.applicationUuid" v-bind:class="{'form-control': editing, 'form-control-plaintext': !editing}" :disabled="!editing">
                         <option v-for="application in applications" v-bind:key="application.uuid" v-bind:value="application.uuid">{{application.name}}</option>
                     </select>
                 </div>
@@ -74,7 +74,7 @@
 
                 <div class="form-group">
                     <label>Server</label>
-                    <select v-model="instance.variables.server_uuid" v-bind:class="{'form-control': editing, 'form-control-plaintext': !editing}" :disabled="!editing">
+                    <select v-model="instance.serverUuid" v-bind:class="{'form-control': editing, 'form-control-plaintext': !editing}" :disabled="!editing">
                         <option v-for="server in servers" v-bind:key="server.uuid" v-bind:value="server.uuid">{{server.name}}</option>
                     </select>
                 </div>
