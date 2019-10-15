@@ -1,34 +1,29 @@
 <template>
-    <div id="server-detail">
-        <div v-if="loading">Loading...</div>
+    <div class="detail-page">
+        <loader v-if="loading" />
 
-        <div class="header">
-            <div v-if="server" class="container d-flex justify-content-between align-items-center">
-                <strong>{{ serverName }}</strong>
-                <div class="actions">
+        <detail-header :title="serverName" v-if="server">
+            <button class="btn btn-outline-primary" v-if="editing" v-on:click="submit" :disabled="anyPending()">
+                <fa :icon="['far', 'save']" />
+                Save
+            </button>
 
-                <button class="btn btn-outline-primary" v-if="editing" v-on:click="submit" :disabled="anyPending()">
-                    <fa :icon="['far', 'save']" />
-                    Save
-                </button>
-
-                <b-dropdown v-if="!editing" split right variant="outline-secondary" v-on:click="edit" :disabled="anyPending()">
-                    <template v-slot:button-content>
-                        <fa :icon="['fas', 'pen']" /> Edit
-                    </template>
-                    <b-dropdown-item v-on:click="serverDelete" :disabled="anyPending()" class="dropdown-item-danger">
-                        <fa :icon="['far', 'trash-alt']" /> Remove
-                    </b-dropdown-item>
-                </b-dropdown>
-            </div>
-            </div>
-        </div>
+            <b-dropdown v-if="!editing" split right variant="outline-secondary" v-on:click="edit" :disabled="anyPending()">
+                <template v-slot:button-content>
+                    <fa :icon="['fas', 'pen']" /> Edit
+                </template>
+                <b-dropdown-item v-on:click="serverDelete" :disabled="anyPending()" class="dropdown-item-danger">
+                    <fa :icon="['far', 'trash-alt']" /> Remove
+                </b-dropdown-item>
+            </b-dropdown>
+        </detail-header>
 
         <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
-        <div v-if="server">
-            <div>
-                <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="form" v-if="server">
+            <fieldset>
+                <legend>General</legend>
+
                 <div class="form-group">
                     <label>Name</label>
                     <input v-model.trim="$v.server.name.$model" v-bind:class="{'is-invalid': $v.server.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
@@ -46,6 +41,10 @@
                     <input v-model.trim="$v.server.username.$model" v-bind:class="{'is-invalid': $v.server.username.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
                     <p class="invalid-feedback" v-if="!$v.server.username.required">Field is required</p>
                 </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>SSH Keys</legend>
 
                 <div class="form-group">
                     <label>Private Key</label>
@@ -58,10 +57,8 @@
                     <textarea rows="5" v-model.trim="$v.server.publicKey.$model" v-bind:class="{'is-invalid': $v.server.publicKey.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing"></textarea>
                     <p class="invalid-feedback" v-if="!$v.server.publicKey.required">Field is required</p>
                 </div>
-
-                </form>
-            </div>
-        </div>
+            </fieldset>
+        </form>
     </div>
 </template>
 
@@ -70,9 +67,14 @@ import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
 import { getServer, putServer, deleteServer } from '../api'
+import DetailHeader from '../components/DetailHeader'
 
 export default {
   name: 'ServerDetail',
+
+  components: {
+      DetailHeader
+  },
 
   mixins: [validationMixin],
 
@@ -160,45 +162,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-#server-detail {
-    margin-top: 5rem;
-    margin-bottom: 10rem;
-}
-
-.actions {
-    text-align: right;
-}
-
-.actions .btn {
-    padding: .375rem 1rem;
-    margin-left: 1rem;
-}
-
-label {
-    font-weight: bold;
-}
-
-.form-control-plaintext {
-    outline: none;
-    padding: 0.375rem 0.75rem;
-    background: #f5f2f0;
-    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-}
-
-.header {
-    position: fixed;
-    left: 0;
-    top: 56px;
-    right: 0;
-    background: white;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #ddd;
-    z-index: 5;
-}
-
-.header .btn-group {
-    padding: 0 !important;
-}
-</style>

@@ -1,38 +1,32 @@
 <template>
-    <div id="instance-detail">
+    <div class="detail-page">
         <loader v-if="loading" />
 
-        <div class="header" v-if="instance">
-            <div class="container d-flex justify-content-between align-items-center">
-                <strong>{{ instanceName }}</strong>
+        <detail-header :title="instanceName" v-if="instance">
+            <button class="btn btn-outline-primary" v-if="!editing" v-on:click="deploy" :disabled="anyPending()">
+                <fa :icon="['fas', 'sync-alt']" spin v-if="deployStatus === 'PENDING'" />
+                <fa :icon="['fas', 'play']" v-else />
+                Deploy
+            </button>
 
-                <div class="actions">
-                    <button class="btn btn-outline-primary" v-if="!editing" v-on:click="deploy" :disabled="anyPending()">
-                        <fa :icon="['fas', 'sync-alt']" spin v-if="deployStatus === 'PENDING'" />
-                        <fa :icon="['fas', 'play']" v-else />
-                        Deploy
-                    </button>
+            <button class="btn btn-outline-primary" v-if="editing" v-on:click="submit" :disabled="anyPending()">
+                <fa :icon="['far', 'save']" />
+                Save
+            </button>
 
-                    <button class="btn btn-outline-primary" v-if="editing" v-on:click="submit" :disabled="anyPending()">
-                        <fa :icon="['far', 'save']" />
-                        Save
-                    </button>
-
-                    <b-dropdown v-if="!editing" split right variant="outline-secondary" v-on:click="edit" :disabled="anyPending()">
-                        <template v-slot:button-content>
-                            <fa :icon="['fas', 'pen']" /> Edit
-                        </template>
-                        <b-dropdown-item v-on:click="instanceClone" :disabled="anyPending()">
-                            <fa :icon="['far', 'copy']" /> Make a copy
-                        </b-dropdown-item>
-                        <b-dropdown-divider></b-dropdown-divider>
-                        <b-dropdown-item v-on:click="instanceDelete" :disabled="anyPending()" class="dropdown-item-danger">
-                            <fa :icon="['far', 'trash-alt']" /> Remove
-                        </b-dropdown-item>
-                    </b-dropdown>
-                </div>
-            </div>
-        </div>
+            <b-dropdown v-if="!editing" split right variant="outline-secondary" v-on:click="edit" :disabled="anyPending()">
+                <template v-slot:button-content>
+                    <fa :icon="['fas', 'pen']" /> Edit
+                </template>
+                <b-dropdown-item v-on:click="instanceClone" :disabled="anyPending()">
+                    <fa :icon="['far', 'copy']" /> Make a copy
+                </b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item v-on:click="instanceDelete" :disabled="anyPending()" class="dropdown-item-danger">
+                    <fa :icon="['far', 'trash-alt']" /> Remove
+                </b-dropdown-item>
+            </b-dropdown>
+        </detail-header>
 
         <div v-if="error" class="alert alert-danger">{{ error }}</div>
         <div v-if="deployStatus === 'ERROR'" class="alert alert-danger">
@@ -45,9 +39,10 @@
             Clone failed.
         </div>
 
-        <div v-if="instance">
-            <div>
-                <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="form" v-if="instance">
+            <fieldset>
+                <legend>General</legend>
+
                 <div class="form-group">
                     <label>Name</label>
                     <input v-model.trim="$v.instance.name.$model" v-bind:class="{'is-invalid': $v.instance.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
@@ -61,17 +56,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Path</label>
-                    <input v-model.trim="$v.instance.path.$model" v-bind:class="{'is-invalid': $v.instance.path.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
-                    <p class="invalid-feedback" v-if="!$v.instance.path.required">Field is required</p>
-                </div>
-
-                <div class="form-group">
                     <label>Application Template</label>
                     <select v-model="instance.variables.application_uuid" v-bind:class="{'form-control': editing, 'form-control-plaintext': !editing}" :disabled="!editing">
                         <option v-for="application in applications" v-bind:key="application.uuid" v-bind:value="application.uuid">{{application.name}}</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label>Docker Image</label>
+                    <input v-model.trim="$v.instance.variables.server_image.$model" v-bind:class="{'is-invalid': $v.instance.variables.server_image.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
+                    <p class="invalid-feedback" v-if="!$v.instance.variables.server_image.required">Field is required</p>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Server</legend>
 
                 <div class="form-group">
                     <label>Server</label>
@@ -87,12 +86,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Path</label>
+                    <input v-model.trim="$v.instance.path.$model" v-bind:class="{'is-invalid': $v.instance.path.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
+                    <p class="invalid-feedback" v-if="!$v.instance.path.required">Field is required</p>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Security</legend>
+
+                <div class="form-group">
                     <label>JWT Secret</label>
                     <input v-model.trim="$v.instance.variables.jwt_secret.$model" v-bind:class="{'is-invalid': $v.instance.variables.jwt_secret.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.jwt_secret.required">Field is required</p>
                 </div>
+            </fieldset>
 
-                <h2>Repository</h2>
+            <fieldset>
+                <legend>Repository</legend>
 
                 <div class="form-group">
                     <label>Type</label>
@@ -146,9 +157,13 @@
                     <input v-model.trim="$v.instance.variables.repository_blazegraph_url.$model" v-bind:class="{'is-invalid': $v.instance.variables.repository_blazegraph_url.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.repository_blazegraph_url.required">Field is required</p>
                 </div>
+            </fieldset>
 
 
-                <h2>Metadata</h2>
+            <!-- <h2>Metadata</h2> -->
+
+            <fieldset>
+                <legend>Metadata</legend>
 
                 <div class="form-group">
                     <label>Root Specs</label>
@@ -203,16 +218,21 @@
                     <input v-model.trim="$v.instance.variables.metadata_accessRightsDescription.$model" v-bind:class="{'is-invalid': $v.instance.variables.metadata_accessRightsDescription.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.metadata_accessRightsDescription.required">Field is required</p>
                 </div>
+            </fieldset>
 
-                <h2>FAIR Search</h2>
+
+            <fieldset>
+                <legend>FAIR Search</legend>
 
                 <div class="form-group">
                     <label>FDP Submit URL</label>
                     <input v-model.trim="$v.instance.variables.fairSearch_fdpSubmitUrl.$model" v-bind:class="{'is-invalid': $v.instance.variables.fairSearch_fdpSubmitUrl.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.fairSearch_fdpSubmitUrl.required">Field is required</p>
                 </div>
+            </fieldset>
 
-                <h2>PID System</h2>
+            <fieldset>
+                <legend>PID System</legend>
 
                 <div class="form-group">
                     <label>Type</label>
@@ -227,8 +247,10 @@
                     <input v-model.trim="$v.instance.variables.pidSystem_purl_baseUrl.$model" v-bind:class="{'is-invalid': $v.instance.variables.pidSystem_purl_baseUrl.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.pidSystem_purl_baseUrl.required">Field is required</p>
                 </div>
+            </fieldset>
 
-                <h2>SCSS</h2>
+            <fieldset>
+                <legend>SCSS</legend>
 
                 <div class="form-group">
                     <label>Customizations</label>
@@ -239,10 +261,8 @@
                     <label>Extra Styles</label>
                     <prism-editor v-model="instance.variables.scss_extra" language="scss" :readonly="!editing"></prism-editor>
                 </div>
-
-                </form>
-            </div>
-        </div>
+            </fieldset>
+        </form>
     </div>
 </template>
 
@@ -251,6 +271,7 @@ import axios from 'axios'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import PrismEditor from 'vue-prism-editor'
+import DetailHeader from '../components/DetailHeader'
 
 import { getInstance, putInstance, deployInstance, deleteInstance, cloneInstance, getServers, getApplications } from '../api'
 
@@ -258,6 +279,7 @@ export default {
   name: 'InstanceDetail',
 
   components: {
+      DetailHeader,
       PrismEditor
   },
 
@@ -271,6 +293,7 @@ export default {
             path: { required },
             variables: {
                 server_port: { required },
+                server_image: { required },
                 jwt_secret: { required },
                 repository_type: { required },
                 repository_native_dir: this.instance.variables.repository_type === 2 ? { required } : {},
@@ -399,54 +422,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-#instance-detail {
-    margin-top: 3rem;
-    margin-bottom: 10rem;
-}
-
-.actions {
-    text-align: right;
-}
-
-.actions .btn, .actions .btn-group {
-    padding: .375rem 1rem;
-    margin-left: .5rem;
-}
-
-label {
-    font-weight: bold;
-}
-
-.form-control-plaintext {
-    outline: none;
-    padding: 0.375rem 0.75rem;
-    background: #f5f2f0;
-    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-}
-
-select.form-control-plaintext {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-}
-
-select.form-control-plaintext::-ms-expand {
-    display: none;
-}
-
-.header {
-    position: fixed;
-    left: 0;
-    top: 56px;
-    right: 0;
-    padding: 0.5rem 0;
-    background: white;
-    border-bottom: 1px solid #ddd;
-    z-index: 5;
-}
-
-.header .btn-group {
-    padding: 0 !important;
-}
-</style>

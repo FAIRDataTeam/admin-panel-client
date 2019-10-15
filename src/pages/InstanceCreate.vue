@@ -1,16 +1,20 @@
 <template>
-    <div id="instance">
+    <div class="detail-page">
         <loader v-if="loading" />
         <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
-        <div>
-            <h1>Create Instance</h1>
+        <detail-header title="Create Instance" v-if="ready">
+            <button class="btn btn-outline-primary" v-on:click="submit" :disabled="submitStatus === 'PENDING'">
+                <fa :icon="['far', 'save']" />
+                Save
+            </button>
+        </detail-header>
 
-            <div class="actions">
-                <button class="btn btn-primary" v-on:click="submit" :disabled="submitStatus === 'PENDING'">Save</button>
-            </div>
-            <div>
-                <form @submit.prevent="submit">
+
+        <form @submit.prevent="submit" class="form" v-if="ready">
+            <fieldset>
+                <legend>General</legend>
+
                 <div class="form-group">
                     <label>Name</label>
                     <input class="form-control" v-model.trim="$v.instance.name.$model" v-bind:class="{'is-invalid': $v.instance.name.$error}">
@@ -24,18 +28,22 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Path</label>
-                    <input class="form-control" v-model.trim="$v.instance.path.$model" v-bind:class="{'is-invalid': $v.instance.path.$error}">
-                    <p class="invalid-feedback" v-if="!$v.instance.path.required">Field is required</p>
-                </div>
-
-                <div class="form-group">
                     <label>Application Template</label>
                     <select class="form-control" v-model="$v.instance.variables.application_uuid.$model" v-bind:class="{'is-invalid': $v.instance.variables.application_uuid.$error}">
                         <option v-for="application in applications" v-bind:key="application.uuid" v-bind:value="application.uuid">{{application.name}}</option>
                     </select>
                     <p class="invalid-feedback" v-if="!$v.instance.variables.application_uuid.required">Field is required</p>
                 </div>
+
+                <div class="form-group">
+                    <label>Docker Image</label>
+                    <input class="form-control" v-model.trim="$v.instance.variables.server_image.$model" v-bind:class="{'is-invalid': $v.instance.variables.server_image.$error}">
+                    <p class="invalid-feedback" v-if="!$v.instance.variables.server_image.required">Field is required</p>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Server</legend>
 
                 <div class="form-group">
                     <label>Server</label>
@@ -52,12 +60,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Path</label>
+                    <input class="form-control" v-model.trim="$v.instance.path.$model" v-bind:class="{'is-invalid': $v.instance.path.$error}">
+                    <p class="invalid-feedback" v-if="!$v.instance.path.required">Field is required</p>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Security</legend>
+
+                <div class="form-group">
                     <label>JWT Secret</label>
                     <input class="form-control" v-model.trim="$v.instance.variables.jwt_secret.$model" v-bind:class="{'is-invalid': $v.instance.variables.jwt_secret.$error}">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.jwt_secret.required">Field is required</p>
                 </div>
+            </fieldset>
 
-                <h2>Repository</h2>
+            <fieldset>
+                <legend>Repository</legend>
 
                 <div class="form-group">
                     <label>Type</label>
@@ -111,9 +131,10 @@
                     <input class="form-control" v-model.trim="$v.instance.variables.repository_blazegraph_url.$model" v-bind:class="{'is-invalid': $v.instance.variables.repository_blazegraph_url.$error}">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.repository_blazegraph_url.required">Field is required</p>
                 </div>
+            </fieldset>
 
-
-                <h2>Metadata</h2>
+            <fieldset>
+                <legend>Metadata</legend>
 
                 <div class="form-group">
                     <label>Root Specs</label>
@@ -168,16 +189,20 @@
                     <input class="form-control" v-model.trim="$v.instance.variables.metadata_accessRightsDescription.$model" v-bind:class="{'is-invalid': $v.instance.variables.metadata_accessRightsDescription.$error}">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.metadata_accessRightsDescription.required">Field is required</p>
                 </div>
+            </fieldset>
 
-                <h2>FAIR Search</h2>
+            <fieldset>
+                <legend>FAIR Search</legend>
 
                 <div class="form-group">
                     <label>FDP Submit URL</label>
                     <input class="form-control" v-model.trim="$v.instance.variables.fairSearch_fdpSubmitUrl.$model" v-bind:class="{'is-invalid': $v.instance.variables.fairSearch_fdpSubmitUrl.$error}">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.fairSearch_fdpSubmitUrl.required">Field is required</p>
                 </div>
+            </fieldset>
 
-                <h2>PID System</h2>
+            <fieldset>
+                <legend>PID System</legend>
 
                 <div class="form-group">
                     <label>Type</label>
@@ -192,8 +217,10 @@
                     <input class="form-control" v-model.trim="$v.instance.variables.pidSystem_purl_baseUrl.$model" v-bind:class="{'is-invalid': $v.instance.variables.pidSystem_purl_baseUrl.$error}">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.pidSystem_purl_baseUrl.required">Field is required</p>
                 </div>
+            </fieldset>
 
-                <h2>SCSS</h2>
+            <fieldset>
+                <legend>SCSS</legend>
 
                 <div class="form-group">
                     <label>Customizations</label>
@@ -204,10 +231,8 @@
                     <label>Extra Styles</label>
                     <prism-editor v-model="instance.variables.scss_extra" language="scss"></prism-editor>
                 </div>
-
-                </form>
-            </div>
-        </div>
+            </fieldset>
+        </form>
     </div>
 </template>
 
@@ -216,6 +241,7 @@ import axios from 'axios'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import PrismEditor from 'vue-prism-editor'
+import DetailHeader from '../components/DetailHeader'
 
 import { postInstance, getApplications, getServers } from '../api'
 
@@ -223,6 +249,7 @@ export default {
   name: 'Instance',
 
   components: {
+      DetailHeader,
       PrismEditor
   },
 
@@ -238,6 +265,7 @@ export default {
                 application_uuid: { required },
                 server_uuid: { required },
                 server_port: { required },
+                server_image: { required },
                 jwt_secret: { required },
                 repository_type: { required },
                 repository_native_dir: this.instance.variables.repository_type === 2 ? { required } : {},
@@ -268,6 +296,7 @@ export default {
       return {
           servers: null,
           applications: null,
+          ready: false,
           loading: false,
           instance: {
               name: '',
@@ -327,6 +356,7 @@ export default {
             .then(([servers, applications]) => {
                 this.servers = servers.data
                 this.applications = applications.data
+                this.ready = true
             })
             .catch(error => this.error = error)
             .finally(() => this.loading = false)
@@ -348,22 +378,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-#instance {
-    margin-bottom: 10rem;
-}
-
-.actions {
-    text-align: right;
-}
-
-.actions .btn {
-    padding: .375rem 1rem;
-    margin-left: 1rem;
-}
-
-label {
-    font-weight: bold;
-}
-</style>

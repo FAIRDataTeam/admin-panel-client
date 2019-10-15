@@ -1,12 +1,18 @@
 <template>
-    <div id="server">
+    <div class="detail-page">
         <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
-        <div>
-            <h1>Create Server</h1>
+        <detail-header title="Create Server">
+            <button class="btn btn-outline-primary" v-on:click="submit" :disabled="submitStatus === 'PENDING'">
+                <fa :icon="['far', 'save']" />
+                Save
+            </button>
+        </detail-header>
 
-            <div>
-                <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="form">
+            <fieldset>
+                <legend>General</legend>
+
                 <div class="form-group">
                     <label>Name</label>
                     <input class="form-control" v-model.trim="$v.server.name.$model" v-bind:class="{'is-invalid': $v.server.name.$error}">
@@ -24,6 +30,10 @@
                     <input class="form-control" v-model.trim="$v.server.username.$model" v-bind:class="{'is-invalid': $v.server.username.$error}">
                     <p class="invalid-feedback" v-if="!$v.server.username.required">Field is required</p>
                 </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>SSH Keys</legend>
 
                 <div class="form-group">
                     <label>Private Key</label>
@@ -36,14 +46,8 @@
                     <textarea class="form-control" rows="5" v-model.trim="$v.server.publicKey.$model" v-bind:class="{'is-invalid': $v.server.publicKey.$error}"></textarea>
                     <p class="invalid-feedback" v-if="!$v.server.publicKey.required">Field is required</p>
                 </div>
-
-                <div class="text-right">
-                    <button type="submit" class="btn btn-primary" :disabled="submitStatus === 'PENDING'">Save</button>
-                </div>
-
-                </form>
-            </div>
-        </div>
+            </fieldset>
+        </form>
     </div>
 </template>
 
@@ -52,9 +56,14 @@ import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
 import { postServer } from '../api'
+import DetailHeader from '../components/DetailHeader'
 
 export default {
   name: 'ServerCreate',
+
+  components: {
+      DetailHeader
+  },
 
   mixins: [validationMixin],
 
@@ -102,26 +111,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-#server {
-    margin-bottom: 10rem;
-}
-
-.actions {
-    text-align: right;
-}
-
-.actions .btn {
-    padding: .375rem 1rem;
-    margin-left: 1rem;
-}
-
-label {
-    font-weight: bold;
-}
-
-.form-control-plaintext {
-    outline: none;
-}
-</style>
