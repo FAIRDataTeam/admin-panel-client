@@ -67,6 +67,20 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Application Template</label>
+                    <select v-model="instance.variables.application_uuid" v-bind:class="{'form-control': editing, 'form-control-plaintext': !editing}" :disabled="!editing">
+                        <option v-for="application in applications" v-bind:key="application.uuid" v-bind:value="application.uuid">{{application.name}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Server</label>
+                    <select v-model="instance.variables.server_uuid" v-bind:class="{'form-control': editing, 'form-control-plaintext': !editing}" :disabled="!editing">
+                        <option v-for="server in servers" v-bind:key="server.uuid" v-bind:value="server.uuid">{{server.name}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label>Server Port</label>
                     <input v-model.trim="$v.instance.variables.server_port.$model" v-bind:class="{'is-invalid': $v.instance.variables.server_port.$error, 'form-control': editing, 'form-control-plaintext': !editing}" :readonly="!editing">
                     <p class="invalid-feedback" v-if="!$v.instance.variables.server_port.required">Field is required</p>
@@ -233,11 +247,12 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import PrismEditor from 'vue-prism-editor'
 
-import { getInstance, putInstance, deployInstance, deleteInstance, cloneInstance } from '../api'
+import { getInstance, putInstance, deployInstance, deleteInstance, cloneInstance, getServers, getApplications } from '../api'
 
 export default {
   name: 'InstanceDetail',
@@ -286,6 +301,8 @@ export default {
           instanceName: 'Instance',
           loading: false,
           instance: null,
+          servers: null,
+          applications: null,
           error: null,
           editing: false,
           submitStatus: null,
@@ -307,12 +324,19 @@ export default {
       fetchData() {
           this.error = this.instance = null
           this.loading = true
-          this.error = null
 
-          getInstance(this.$route.params.id)
-            .then(response => {
-                this.instance = response.data
+          const promises = [
+              getInstance(this.$route.params.id),
+              getServers(),
+              getApplications()
+          ]
+
+          axios.all(promises)
+            .then(([instance, servers, applications]) => {
+                this.instance = instance.data
                 this.instanceName = this.instance.name
+                this.servers = servers.data
+                this.applications = applications.data
             })
             .catch(error => this.error = error)
             .finally(() => this.loading = false)

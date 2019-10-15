@@ -56,6 +56,26 @@ export function deleteServer(server) {
     return deleteApi(`/servers/${server.uuid}`)
 }
 
+export function getApplications() {
+    return get('/applications')
+}
+
+export function getApplication(uuid) {
+    return get(`/applications/${uuid}`)
+}
+
+export function postApplication(server) {
+    return post('/applications', server)
+}
+
+export function putApplication(server) {
+    return put(`/applications/${server.uuid}`, server)
+}
+
+export function deleteApplication(server) {
+    return deleteApi(`/applications/${server.uuid}`)
+}
+
 function get(url) {
     return axios.get(`${apiUrl}${url}`, {
         headers: { Authorization: 'Bearer ' + getUserToken() }

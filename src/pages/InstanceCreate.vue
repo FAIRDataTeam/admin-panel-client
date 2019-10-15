@@ -1,5 +1,6 @@
 <template>
     <div id="instance">
+        <loader v-if="loading" />
         <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
         <div>
@@ -26,6 +27,22 @@
                     <label>Path</label>
                     <input class="form-control" v-model.trim="$v.instance.path.$model" v-bind:class="{'is-invalid': $v.instance.path.$error}">
                     <p class="invalid-feedback" v-if="!$v.instance.path.required">Field is required</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Application Template</label>
+                    <select class="form-control" v-model="$v.instance.variables.application_uuid.$model" v-bind:class="{'is-invalid': $v.instance.variables.application_uuid.$error}">
+                        <option v-for="application in applications" v-bind:key="application.uuid" v-bind:value="application.uuid">{{application.name}}</option>
+                    </select>
+                    <p class="invalid-feedback" v-if="!$v.instance.variables.application_uuid.required">Field is required</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Server</label>
+                    <select class="form-control" v-model="$v.instance.variables.server_uuid.$model" v-bind:class="{'is-invalid': $v.instance.variables.server_uuid.$error}">
+                        <option v-for="server in servers" v-bind:key="server.uuid" v-bind:value="server.uuid">{{server.name}}</option>
+                    </select>
+                    <p class="invalid-feedback" v-if="!$v.instance.variables.server_uuid.required">Field is required</p>
                 </div>
 
                 <div class="form-group">
@@ -195,11 +212,12 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import PrismEditor from 'vue-prism-editor'
 
-import { postInstance } from '../api'
+import { postInstance, getApplications, getServers } from '../api'
 
 export default {
   name: 'Instance',
@@ -217,6 +235,8 @@ export default {
             url: { required },
             path: { required },
             variables: {
+                application_uuid: { required },
+                server_uuid: { required },
                 server_port: { required },
                 jwt_secret: { required },
                 repository_type: { required },
@@ -246,11 +266,16 @@ export default {
 
   data() {
       return {
+          servers: null,
+          applications: null,
+          loading: false,
           instance: {
               name: '',
               url: '',
               path: '',
               variables: {
+                application_uuid: '',
+                server_uuid: '',
                 server_port: '',
                 jwt_secret: '',
                 repository_type: 1,
@@ -280,7 +305,33 @@ export default {
       }
   },
 
+  created() {
+      this.fetchData()
+  },
+
+  watch: {
+      '$route': 'fetchData'
+  },
+
   methods: {
+      fetchData() {
+          this.error = null
+          this.loading = true
+
+          const promises = [
+              getServers(),
+              getApplications()
+          ]
+
+          axios.all(promises)
+            .then(([servers, applications]) => {
+                this.servers = servers.data
+                this.applications = applications.data
+            })
+            .catch(error => this.error = error)
+            .finally(() => this.loading = false)
+      },
+
       submit() {
           this.$v.$touch()
 
