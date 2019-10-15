@@ -2,7 +2,7 @@
 
 > This is the client for the [Admin Panel Server Application](https://github.com/FAIRDataTeam/admin-panel-server/).
 
-[![Build Status](https://travis-ci.org/FAIRDataTeam/admin-panel-server.svg?branch=master)](https://travis-ci.org/FAIRDataTeam/admin-panel-server.svg?branch=master)
+[![Build Status](https://travis-ci.org/FAIRDataTeam/admin-panel-client.svg?branch=master)](https://travis-ci.org/FAIRDataTeam/admin-panel-server.svg?branch=master)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
 ## Deployment
