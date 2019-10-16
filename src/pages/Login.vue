@@ -1,25 +1,43 @@
 <template>
-    <div>
-      <div class="card bg-light">
-        <div class="card-header">Login</div>
-        <div class="card-body">
-          <form @submit.prevent="submit">
-            <div class="alert alert-danger" v-if="submitStatus === 'ERROR'">
-              Login failed.
-            </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input v-model="email" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input v-model="password" class="form-control" type="password">
-            </div>
-            <button type="submit" class="btn btn-primary" :disabled="submitStatus === 'PENDING'">Log in</button>
-          </form>
-        </div>
+  <div>
+    <div class="card bg-light">
+      <div class="card-header">
+        Login
+      </div>
+      <div class="card-body">
+        <form @submit.prevent="submit">
+          <div
+            v-if="submitStatus === 'ERROR'"
+            class="alert alert-danger"
+          >
+            Login failed.
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              v-model="email"
+              class="form-control"
+            >
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              v-model="password"
+              class="form-control"
+              type="password"
+            >
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            :disabled="submitStatus === 'PENDING'"
+          >
+            Log in
+          </button>
+        </form>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -53,8 +71,7 @@ export default {
 <style scoped>
 .card {
   max-width: 25rem;
-  margin: auto;
-  margin-top: 4rem;
+  margin: 4rem auto auto;
 }
 
 .card-header {

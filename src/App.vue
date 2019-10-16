@@ -2,25 +2,52 @@
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
       <div class="container">
-        <router-link class="navbar-brand" to="/instances">FDP Admin Panel</router-link>
-        <ul class="navbar-nav mr-auto ml-5" v-if="authenticated">
+        <router-link
+          class="navbar-brand"
+          to="/instances"
+        >
+          FDP Admin Panel
+        </router-link>
+        <ul
+          v-if="authenticated"
+          class="navbar-nav mr-auto ml-5"
+        >
           <li class="nav-item">
-            <router-link class="nav-link" to="/instances">Instances</router-link>
+            <router-link
+              class="nav-link"
+              to="/instances"
+            >
+              Instances
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/servers">Servers</router-link>
+            <router-link
+              class="nav-link"
+              to="/servers"
+            >
+              Servers
+            </router-link>
           </li>
         </ul>
-        <ul class="navbar-nav" v-if="authenticated">
+        <ul
+          v-if="authenticated"
+          class="navbar-nav"
+        >
           <li class="nav-item">
-            <router-link class="nav-link" to="/login" v-on:click.native="logout()">Logout</router-link>
+            <router-link
+              class="nav-link"
+              to="/login"
+              @click.native="logout()"
+            >
+              Logout
+            </router-link>
           </li>
         </ul>
       </div>
     </nav>
 
     <div class="container">
-      <router-view @authenticated="setAuthenticated"></router-view>
+      <router-view @authenticated="setAuthenticated" />
     </div>
   </div>
 </template>
@@ -29,7 +56,7 @@
 import { getUserToken, setUserToken, clearUserToken } from './localStorage'
 
 export default {
-  name: 'app',
+  name: 'App',
 
   data() {
     return {

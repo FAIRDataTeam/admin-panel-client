@@ -8,15 +8,15 @@ import ServerCreate from './pages/ServerCreate.vue'
 import ServerList from './pages/ServerList.vue'
 
 const routes = [
-    { path: '/', redirect: '/instances' },
-    { path: '/login', component: Login, name: 'login' },
-    { path: '/instances', component: InstanceList },
-    { path: '/instances/create', component: InstanceCreate },
-    { path: '/instances/:id', component: InstanceDetail },
-    { path: '/servers', component: ServerList },
-    { path: '/servers/create', component: ServerCreate },
-    { path: '/servers/:id', component: ServerDetail },
-    { path: '*', component: NotFound }
+  { path: '/', redirect: '/instances' },
+  { path: '/login', component: Login, name: 'login' },
+  { path: '/instances', component: InstanceList },
+  { path: '/instances/create', component: InstanceCreate },
+  { path: '/instances/:id', component: InstanceDetail },
+  { path: '/servers', component: ServerList },
+  { path: '/servers/create', component: ServerCreate },
+  { path: '/servers/:id', component: ServerDetail },
+  { path: '*', component: NotFound }
 ]
 
 export default routes

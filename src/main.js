@@ -25,7 +25,7 @@ Vue.use(Vuelidate)
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 
-library.add([far.faTrashAlt, far.faCopy, far.faFileAlt, fas.faEllipsisV, fas.faPlus, fas.faSpinner, fas.faPen, fas.faPlay, fas.faSyncAlt, far.faSave])
+library.add([ far.faTrashAlt, far.faCopy, far.faFileAlt, fas.faEllipsisV, fas.faPlus, fas.faSpinner, fas.faPen, fas.faPlay, fas.faSyncAlt, far.faSave ])
 
 Vue.component('fa', FontAwesomeIcon)
 Vue.component('loader', Loader)
