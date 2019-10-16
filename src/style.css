@@ -1,3 +1,28 @@
+/* Layout */
+
+@media (max-width: 767px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+.detail-page {
+  margin-top: 4rem;
+  margin-bottom: 10rem;
+}
+
+
+/* Navigation */
+
+@media (min-width: 768px) {
+  .navbar .nav-link {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+/* Dropdowns and buttons */
+
 .dropdown-item .svg-inline--fa {
   margin-right: .5rem;
 }
@@ -10,19 +35,27 @@
   color: #dc3545 !important;
 }
 
-.link-muted {
-  color: #212529;
-  text-decoration: underline;
-}
+
+/* Tables */
 
 .table td {
   vertical-align: middle;
 }
 
-.detail-page {
-  margin-top: 4rem;
-  margin-bottom: 10rem;
+@media (max-width: 767px) {
+  .table .desktop-only {
+    display: none;
+  }
 }
+
+@media (min-width: 768px) {
+  .table .mobile-only {
+    display: none;
+  }
+}
+
+
+/* Forms */
 
 .form .form-control-plaintext {
   outline: none;
@@ -56,4 +89,12 @@
 .form fieldset legend {
   width: auto;
   padding: 0 .5rem
+}
+
+
+/* Extra styles */
+
+.link-muted {
+  color: #212529;
+  text-decoration: underline;
 }

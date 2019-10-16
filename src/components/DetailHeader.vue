@@ -25,8 +25,8 @@ export default {
 .header {
   position: fixed;
   left: 0;
-  top: 56px;
   right: 0;
+  top: 56px;
   padding: 0.5rem 0;
   background: white;
   border-bottom: 1px solid #ddd;
@@ -37,8 +37,15 @@ export default {
   padding: 0 !important;
 }
 
-.actions {
+.header strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header .actions {
   text-align: right;
+  white-space: nowrap;
 }
 
 .actions .btn {

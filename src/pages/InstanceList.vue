@@ -21,8 +21,13 @@
         <thead>
           <tr>
             <th>Instance</th>
-            <th>URL</th>
-            <th>Status</th>
+            <th class="desktop-only">
+              URL
+            </th>
+            <th class="desktop-only">
+              Status
+            </th>
+            <th class="mobile-only" />
             <th />
           </tr>
         </thead>
@@ -36,14 +41,14 @@
                 {{ instance.name }}
               </router-link>
             </td>
-            <td>
+            <td class="desktop-only">
               <a
                 class="link-muted"
                 :href="instance.url"
                 target="_blank"
               >{{ instance.url }}</a>
             </td>
-            <td>
+            <td class="desktop-only">
               <span
                 v-if="instance.status === 'RUNNING'"
                 class="badge badge-pill badge-success"
@@ -61,6 +66,26 @@
                 class="badge badge-pill badge-secondary"
               >
                 NOT DEPLOYED
+              </span>
+            </td>
+            <td class="mobile-only">
+              <span
+                v-if="instance.status === 'RUNNING'"
+                class="badge badge-pill badge-success"
+              >
+                <fa :icon="['fas', 'check']" />
+              </span>
+              <span
+                v-if="instance.status === 'ERROR'"
+                class="badge badge-pill badge-danger"
+              >
+                <fa :icon="['fas', 'exclamation-triangle']" />
+              </span>
+              <span
+                v-if="instance.status === 'NOT_DEPLOYED'"
+                class="badge badge-pill badge-secondary"
+              >
+                <fa :icon="['fas', 'ban']" />
               </span>
             </td>
             <td class="text-right">

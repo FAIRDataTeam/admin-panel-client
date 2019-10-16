@@ -66,7 +66,13 @@ export default {
 <style scoped>
 .card {
   max-width: 25rem;
-  margin: 4rem auto auto;
+  margin: auto;
+}
+
+@media (min-width: 768px) {
+  .card {
+    margin-top: 4rem;
+  }
 }
 
 .card-header {

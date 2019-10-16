@@ -21,8 +21,12 @@
         <thead>
           <tr>
             <th>Server</th>
-            <th>Username</th>
-            <th>Hostname</th>
+            <th class="desktop-only">
+              Username
+            </th>
+            <th class="desktop-only">
+              Hostname
+            </th>
             <th />
           </tr>
         </thead>
@@ -36,10 +40,10 @@
                 {{ server.name }}
               </router-link>
             </td>
-            <td>
+            <td class="desktop-only">
               {{ server.username }}
             </td>
-            <td>
+            <td class="desktop-only">
               {{ server.hostname }}
             </td>
             <td class="text-right">
