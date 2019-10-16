@@ -14,12 +14,7 @@
     </div>
 
     <loader v-if="loading" />
-    <div
-      v-if="error"
-      class="alert alert-danger"
-    >
-      {{ error }}
-    </div>
+    <error :message="error" />
 
     <div v-if="servers && servers.length > 0">
       <table class="table table-hover">

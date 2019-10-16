@@ -39,12 +39,7 @@
       </b-dropdown>
     </detail-header>
 
-    <div
-      v-if="error"
-      class="alert alert-danger"
-    >
-      {{ error }}
-    </div>
+    <error :message="error" />
 
     <form
       v-if="server"

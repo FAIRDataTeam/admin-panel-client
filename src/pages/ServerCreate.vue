@@ -1,11 +1,6 @@
 <template>
   <div class="detail-page">
-    <div
-      v-if="error"
-      class="alert alert-danger"
-    >
-      {{ error }}
-    </div>
+    <error :message="error" />
 
     <detail-header title="Create Server">
       <button

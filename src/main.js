@@ -18,6 +18,7 @@ import './style.css'
 import App from './App.vue'
 import routes from './routes'
 import Loader from './components/Loader'
+import Error from './components/Error'
 
 Vue.config.productionTip = false
 
@@ -28,6 +29,7 @@ Vue.use(BootstrapVue)
 library.add([ far.faTrashAlt, far.faCopy, far.faFileAlt, fas.faEllipsisV, fas.faPlus, fas.faSpinner, fas.faPen, fas.faPlay, fas.faSyncAlt, far.faSave ])
 
 Vue.component('fa', FontAwesomeIcon)
+Vue.component('error', Error)
 Vue.component('loader', Loader)
 
 const router = new VueRouter({

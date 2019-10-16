@@ -1,12 +1,7 @@
 <template>
   <div class="detail-page">
     <loader v-if="loading" />
-    <div
-      v-if="error"
-      class="alert alert-danger"
-    >
-      {{ error }}
-    </div>
+    <error :message="error" />
 
     <detail-header
       v-if="ready"

@@ -6,12 +6,7 @@
       </div>
       <div class="card-body">
         <form @submit.prevent="submit">
-          <div
-            v-if="submitStatus === 'ERROR'"
-            class="alert alert-danger"
-          >
-            Login failed.
-          </div>
+          <error :message="submitStatus === 'ERROR' ? 'Login failed.' : null" />
           <div class="form-group">
             <label>Email</label>
             <input

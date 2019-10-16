@@ -65,29 +65,15 @@
       </b-dropdown>
     </detail-header>
 
-    <div
-      v-if="error"
-      class="alert alert-danger"
-    >
-      {{ error }}
-    </div>
-    <div
-      v-if="deployStatus === 'ERROR'"
-      class="alert alert-danger"
-    >
-      Deploy failed.
-    </div>
+    <error :message="error" />
+    <error :message="deployStatus === 'ERROR' ? 'Deploy failed.' : null" />
+    <error :message="cloneStatus === 'ERROR' ? 'Clone failed.' : null" />
+
     <div
       v-if="deployStatus === 'DONE'"
       class="alert alert-success"
     >
       Instance was successfully deployed.
-    </div>
-    <div
-      v-if="cloneStatus === 'ERROR'"
-      class="alert alert-danger"
-    >
-      Clone failed.
     </div>
 
     <form
