@@ -1,7 +1,5 @@
 <template>
   <div class="detail-page">
-    <error :message="error" />
-
     <detail-header title="Create Server">
       <button
         class="btn btn-outline-primary"
@@ -12,6 +10,8 @@
         Save
       </button>
     </detail-header>
+
+    <error :message="error" />
 
     <form
       class="form"
@@ -135,7 +135,6 @@ export default {
 
   data() {
     return {
-      loading: false,
       server: {
         name: '',
         hostname: '',

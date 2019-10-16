@@ -665,7 +665,7 @@ export default {
           this.applications = applications.data
           this.ready = true
         })
-        .catch(error => this.error = error)
+        .catch(error => this.error = error.toString())
         .finally(() => this.loading = false)
     },
 

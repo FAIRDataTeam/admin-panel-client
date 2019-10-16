@@ -163,7 +163,7 @@ export default {
 
       getInstances()
         .then(response => this.instances = _.orderBy(response.data, 'name'))
-        .catch(error => this.error = error)
+        .catch(error => this.error = error.toString())
         .finally(() => this.loading = false)
     },
 

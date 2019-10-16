@@ -64,16 +64,20 @@ export function getApplication(uuid) {
   return get(`/applications/${uuid}`)
 }
 
-export function postApplication(server) {
-  return post('/applications', server)
+export function postApplication(application) {
+  return post('/applications', application)
 }
 
-export function putApplication(server) {
-  return put(`/applications/${server.uuid}`, server)
+export function putApplication(application) {
+  return put(`/applications/${application.uuid}`, application)
 }
 
-export function deleteApplication(server) {
-  return deleteApi(`/applications/${server.uuid}`)
+export function deleteApplication(application) {
+  return deleteApi(`/applications/${application.uuid}`)
+}
+
+export function cloneApplication(application) {
+  return post(`/applications?source=${application.uuid}`, null)
 }
 
 function get(url) {

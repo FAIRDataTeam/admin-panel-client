@@ -192,7 +192,7 @@ export default {
           this.server = response.data
           this.serverName = this.server.name
         })
-        .catch(error => this.error = error)
+        .catch(error => this.error = error.toString())
         .finally(() => this.loading = false)
     },
 

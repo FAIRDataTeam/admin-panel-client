@@ -4,6 +4,7 @@ import * as fas from '@fortawesome/free-solid-svg-icons'
 
 library.add([
   far.faCopy,
+  far.faFile,
   far.faFileAlt,
   far.faSave,
   far.faTrashAlt,

@@ -36,6 +36,14 @@
                 Servers
               </router-link>
             </b-nav-item>
+            <b-nav-item>
+              <router-link
+                class="nav-link"
+                to="/applications"
+              >
+                Applications
+              </router-link>
+            </b-nav-item>
           </b-navbar-nav>
 
           <b-navbar-nav

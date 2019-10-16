@@ -697,7 +697,7 @@ export default {
           this.servers = servers.data
           this.applications = applications.data
         })
-        .catch(error => this.error = error)
+        .catch(error => this.error = error.toString())
         .finally(() => this.loading = false)
     },
 

@@ -12,7 +12,7 @@ export default {
 
   props: {
     message: {
-      type: String,
+      validator: prop => typeof prop === 'string' || prop == null,
       required: true
     }
   }

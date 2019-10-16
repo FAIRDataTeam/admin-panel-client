@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="d-flex justify-content-between align-items-center">
-      <h1>Servers</h1>
+      <h1>Applications</h1>
       <div class="mb-2 text-right">
         <router-link
-          to="/servers/create"
+          to="/applications/create"
           class="btn btn-outline-primary"
         >
           <fa :icon="['fas', 'plus']" />
@@ -16,35 +16,23 @@
     <loader v-if="loading" />
     <error :message="error" />
 
-    <div v-if="servers && servers.length > 0">
+    <div v-if="applications && applications.length > 0">
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>Server</th>
-            <th class="desktop-only">
-              Username
-            </th>
-            <th class="desktop-only">
-              Hostname
-            </th>
+            <th>Application</th>
             <th />
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="server in servers"
-            :key="server.uuid"
+            v-for="application in applications"
+            :key="application.uuid"
           >
             <td>
-              <router-link :to="`/servers/${server.uuid}`">
-                {{ server.name }}
+              <router-link :to="`/applications/${application.uuid}`">
+                {{ application.name }}
               </router-link>
-            </td>
-            <td class="desktop-only">
-              {{ server.username }}
-            </td>
-            <td class="desktop-only">
-              {{ server.hostname }}
             </td>
             <td class="text-right">
               <b-dropdown
@@ -56,14 +44,18 @@
                 <template v-slot:button-content>
                   <fa :icon="['fas', 'ellipsis-v']" />
                 </template>
-                <b-dropdown-item @click="viewDetail(server)">
+                <b-dropdown-item @click="viewDetail(application)">
                   <fa :icon="['far', 'file-alt']" />
                   View detail
+                </b-dropdown-item>
+                <b-dropdown-item @click="makeCopy(application)">
+                  <fa :icon="['far', 'copy']" />
+                  Make a copy
                 </b-dropdown-item>
                 <b-dropdown-divider />
                 <b-dropdown-item
                   class="dropdown-item-danger"
-                  @click="remove(server)"
+                  @click="remove(application)"
                 >
                   <fa :icon="['far', 'trash-alt']" />
                   Remove
@@ -76,28 +68,27 @@
     </div>
 
     <b-alert
-      :show="servers && servers.length === 0"
+      :show="applications && applications.length === 0"
       variant="light"
     >
-      There are no servers, you can
-      <router-link to="/servers/create">
+      There are no applications, you can
+      <router-link to="/applications/create">
         create
       </router-link>
       a new one.
     </b-alert>
   </div>
 </template>
-
 <script>
-import { getServers, deleteServer } from '../api'
+import { cloneApplication, deleteApplication, getApplications } from '../api'
 
 export default {
-  name: 'ServerList',
+  name: 'ApplicationList',
 
   data() {
     return {
       loading: false,
-      servers: null,
+      applications: null,
       error: null
     }
   },
@@ -112,25 +103,31 @@ export default {
 
   methods: {
     fetchData() {
-      this.error = this.servers = null
+      this.error = this.applications = null
       this.loading = true
 
-      getServers()
-        .then(response => this.servers = response.data)
+      getApplications()
+        .then(response => this.applications = response.data)
         .catch(error => this.error = error.toString())
         .finally(() => this.loading = false)
     },
 
 
-    viewDetail(server) {
-      this.$router.replace(`/servers/${server.uuid}`)
+    viewDetail(application) {
+      this.$router.replace(`/applications/${application.uuid}`)
     },
 
-    remove(server) {
-      if (window.confirm(`Are you sure you want to delete ${server.name}?`)) {
-        deleteServer(server)
+    makeCopy(application) {
+      cloneApplication(application)
+        .then(() => this.fetchData())
+        .catch(() => this.error = 'Unable to make a copy.')
+    },
+
+    remove(application) {
+      if (window.confirm(`Are you sure you want to delete ${application.name}?`)) {
+        deleteApplication(application)
           .then(() => this.fetchData())
-          .catch(() => this.error = `Unable to delete ${server.name}`)
+          .catch(() => this.error = `Unable to delete ${application.name}`)
       }
     }
   }
