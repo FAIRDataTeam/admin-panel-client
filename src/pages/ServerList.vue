@@ -1,138 +1,94 @@
 <template>
   <div>
-    <div class="d-flex justify-content-between align-items-center">
-      <h1>Servers</h1>
-      <div class="mb-2 text-right">
-        <router-link
-          to="/servers/create"
-          class="btn btn-outline-primary"
-        >
-          <fa :icon="['fas', 'plus']" />
-          Create
-        </router-link>
-      </div>
-    </div>
+    <list-header
+      title="Servers"
+      create-link="/servers/create"
+    />
 
     <loader v-if="loading" />
     <error :message="error" />
 
-    <div v-if="servers && servers.length > 0">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Server</th>
-            <th class="desktop-only">
-              Username
-            </th>
-            <th class="desktop-only">
-              Hostname
-            </th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="server in servers"
-            :key="server.uuid"
-          >
-            <td>
-              <router-link :to="`/servers/${server.uuid}`">
-                {{ server.name }}
-              </router-link>
-            </td>
-            <td class="desktop-only">
-              {{ server.username }}
-            </td>
-            <td class="desktop-only">
-              {{ server.hostname }}
-            </td>
-            <td class="text-right">
-              <b-dropdown
-                text="Actions"
-                right
-                variant="link"
-                no-caret
-              >
-                <template v-slot:button-content>
-                  <fa :icon="['fas', 'ellipsis-v']" />
-                </template>
-                <b-dropdown-item @click="viewDetail(server)">
-                  <fa :icon="['far', 'file-alt']" />
-                  View detail
-                </b-dropdown-item>
-                <b-dropdown-divider />
-                <b-dropdown-item
-                  class="dropdown-item-danger"
-                  @click="remove(server)"
-                >
-                  <fa :icon="['far', 'trash-alt']" />
-                  Remove
-                </b-dropdown-item>
-              </b-dropdown>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <list-table :data="data">
+      <template v-slot:header>
+        <th>Server</th>
+        <th class="desktop-only">
+          Username
+        </th>
+        <th class="desktop-only">
+          Hostname
+        </th>
+        <th />
+      </template>
 
-    <b-alert
-      :show="servers && servers.length === 0"
-      variant="light"
-    >
-      There are no servers, you can
-      <router-link to="/servers/create">
-        create
-      </router-link>
-      a new one.
-    </b-alert>
+      <template v-slot:row="server">
+        <td>
+          <router-link :to="`/servers/${server.uuid}`">
+            {{ server.name }}
+          </router-link>
+        </td>
+        <td class="desktop-only">
+          {{ server.username }}
+        </td>
+        <td class="desktop-only">
+          {{ server.hostname }}
+        </td>
+        <td class="text-right">
+          <b-dropdown
+            text="Actions"
+            right
+            variant="link"
+            no-caret
+          >
+            <template v-slot:button-content>
+              <fa :icon="['fas', 'ellipsis-v']" />
+            </template>
+            <b-dropdown-item @click="viewDetail(server)">
+              <fa :icon="['far', 'file-alt']" />
+              View detail
+            </b-dropdown-item>
+            <b-dropdown-divider />
+            <b-dropdown-item
+              class="dropdown-item-danger"
+              @click="remove(server)"
+            >
+              <fa :icon="['far', 'trash-alt']" />
+              Remove
+            </b-dropdown-item>
+          </b-dropdown>
+        </td>
+      </template>
+
+      <template v-slot:empty>
+        There are no servers, you can
+        <router-link to="/servers/create">
+          create
+        </router-link>
+        a new one.
+      </template>
+    </list-table>
   </div>
 </template>
 
 <script>
 import { getServers, deleteServer } from '../api'
+import ListHeader from '../components/List/ListHeader'
+import ListTable from '../components/List/ListTable'
+import fetchData from '../mixins/fetchData'
+import removeData from '../mixins/removeData'
 
 export default {
   name: 'ServerList',
-
-  data() {
-    return {
-      loading: false,
-      servers: null,
-      error: null
-    }
+  components: {
+    ListHeader,
+    ListTable
   },
-
-  watch: {
-    '$route': 'fetchData'
-  },
-
-  created() {
-    this.fetchData()
-  },
-
+  mixins: [
+    fetchData,
+    removeData
+  ],
   methods: {
-    fetchData() {
-      this.error = this.servers = null
-      this.loading = true
-
-      getServers()
-        .then(response => this.servers = response.data)
-        .catch(error => this.error = error.toString())
-        .finally(() => this.loading = false)
-    },
-
-
-    viewDetail(server) {
-      this.$router.replace(`/servers/${server.uuid}`)
-    },
-
-    remove(server) {
-      if (window.confirm(`Are you sure you want to delete ${server.name}?`)) {
-        deleteServer(server)
-          .then(() => this.fetchData())
-          .catch(() => this.error = `Unable to delete ${server.name}`)
-      }
-    }
+    getData: getServers,
+    deleteData: deleteServer
   }
 }
 </script>
