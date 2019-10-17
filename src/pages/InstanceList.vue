@@ -5,8 +5,10 @@
       create-link="/instances/create"
     />
 
-    <loader v-if="loading" />
-    <error :message="error" />
+    <status-flash
+      :status="status"
+      :no-loading="data !== null"
+    />
 
     <list-table :data="data">
       <template v-slot:header>
@@ -87,11 +89,11 @@
 <script>
 import { getInstances, deleteInstance, cloneInstance } from '../api'
 import InstanceStatus from '../components/InstanceStatus'
-import ListHeader from '../components/List/ListHeader'
-import ListTable from '../components/List/ListTable'
-import cloneData from '../mixins/cloneData'
-import fetchData from '../mixins/fetchData'
-import removeData from '../mixins/removeData'
+import ListHeader from '../components/list/ListHeader'
+import ListTable from '../components/list/ListTable'
+import cloneData from '../mixins/list/cloneData'
+import fetchData from '../mixins/list/fetchData'
+import removeData from '../mixins/list/removeData'
 
 export default {
   name: 'InstanceList',

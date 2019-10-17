@@ -10,7 +10,7 @@ export default {
     makeCopy(data) {
       this.cloneData(data)
         .then(() => this.fetchData())
-        .catch(() => this.error = `Unable to make a copy of ${data.name}.`)
+        .catch(() => this.status.setError(`Unable to make a copy of ${data.name}.`))
     }
   }
 }

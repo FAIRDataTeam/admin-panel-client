@@ -20,12 +20,12 @@
         </tbody>
       </table>
     </div>
-    <b-alert
-      v-else
-      variant="light"
+    <div
+      v-if="data.length === 0"
+      class="alert alert-light"
     >
       <slot name="empty" />
-    </b-alert>
+    </div>
   </div>
 </template>
 <script>

@@ -5,8 +5,10 @@
       create-link="/applications/create"
     />
 
-    <loader v-if="loading" />
-    <error :message="error" />
+    <status-flash
+      :status="status"
+      :no-loading="data !== null"
+    />
 
     <list-table :data="data">
       <template v-slot:header>
@@ -30,7 +32,7 @@
             <template v-slot:button-content>
               <fa :icon="['fas', 'ellipsis-v']" />
             </template>
-            <b-dropdown-item @click="$router.replace(`/applications/${instance.uuid}`)">
+            <b-dropdown-item @click="$router.replace(`/applications/${application.uuid}`)">
               <fa :icon="['far', 'file-alt']" />
               View detail
             </b-dropdown-item>
@@ -62,11 +64,11 @@
 </template>
 <script>
 import { cloneApplication, deleteApplication, getApplications } from '../api'
-import ListHeader from '../components/List/ListHeader'
-import ListTable from '../components/List/ListTable'
-import cloneData from '../mixins/cloneData'
-import fetchData from '../mixins/fetchData'
-import removeData from '../mixins/removeData'
+import ListHeader from '../components/list/ListHeader'
+import ListTable from '../components/list/ListTable'
+import cloneData from '../mixins/list/cloneData'
+import fetchData from '../mixins/list/fetchData'
+import removeData from '../mixins/list/removeData'
 
 export default {
   name: 'ApplicationList',

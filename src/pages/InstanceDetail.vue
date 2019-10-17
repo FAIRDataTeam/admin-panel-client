@@ -1,10 +1,8 @@
 <template>
   <div class="detail-page">
-    <loader v-if="loading" />
-
     <detail-header
-      v-if="instance"
-      :title="instanceName"
+      v-if="data"
+      :title="dataName"
     >
       <button
         v-if="!editing"
@@ -13,7 +11,7 @@
         @click="deploy"
       >
         <fa
-          v-if="deployStatus === 'PENDING'"
+          v-if="deployStatus.isPending()"
           :icon="['fas', 'sync-alt']"
           spin
         />
@@ -48,7 +46,7 @@
         </template>
         <b-dropdown-item
           :disabled="anyPending()"
-          @click="instanceClone"
+          @click="makeCopy"
         >
           <fa :icon="['far', 'copy']" />
           Make a copy
@@ -65,7 +63,7 @@
         <b-dropdown-item
           :disabled="anyPending()"
           class="dropdown-item-danger"
-          @click="instanceDelete"
+          @click="remove"
         >
           <fa :icon="['far', 'trash-alt']" />
           Remove
@@ -73,19 +71,17 @@
       </b-dropdown>
     </detail-header>
 
-    <error :message="error" />
-    <error :message="deployStatus === 'ERROR' ? 'Deploy failed.' : null" />
-    <error :message="cloneStatus === 'ERROR' ? 'Clone failed.' : null" />
-
-    <div
-      v-if="deployStatus === 'DONE'"
-      class="alert alert-success"
-    >
-      Instance was successfully deployed.
-    </div>
+    <status-flash
+      :status="status"
+      :no-loading="data !== null"
+    />
+    <status-flash
+      :status="deployStatus"
+      no-loading
+    />
 
     <form
-      v-if="instance"
+      v-if="data"
       class="form"
       @submit.prevent="submit"
     >
@@ -95,12 +91,12 @@
         <div class="form-group">
           <label>Name</label>
           <input
-            v-model.trim="$v.instance.name.$model"
-            :class="{'is-invalid': $v.instance.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.name.$model"
+            :class="{'is-invalid': $v.data.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.name.required"
+            v-if="!$v.data.name.required"
             class="invalid-feedback"
           >
             Field is required
@@ -110,12 +106,12 @@
         <div class="form-group">
           <label>URL</label>
           <input
-            v-model.trim="$v.instance.url.$model"
-            :class="{'is-invalid': $v.instance.url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.url.$model"
+            :class="{'is-invalid': $v.data.url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.url.required"
+            v-if="!$v.data.url.required"
             class="invalid-feedback"
           >
             Field is required
@@ -125,7 +121,7 @@
         <div class="form-group">
           <label>Application Template</label>
           <select
-            v-model="instance.applicationUuid"
+            v-model="data.applicationUuid"
             :class="{'form-control': editing, 'form-control-plaintext': !editing}"
             :disabled="!editing"
           >
@@ -142,12 +138,12 @@
         <div class="form-group">
           <label>Docker Image</label>
           <input
-            v-model.trim="$v.instance.variables.server_image.$model"
-            :class="{'is-invalid': $v.instance.variables.server_image.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.server_image.$model"
+            :class="{'is-invalid': $v.data.variables.server_image.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.server_image.required"
+            v-if="!$v.data.variables.server_image.required"
             class="invalid-feedback"
           >
             Field is required
@@ -161,7 +157,7 @@
         <div class="form-group">
           <label>Server</label>
           <select
-            v-model="instance.serverUuid"
+            v-model="data.serverUuid"
             :class="{'form-control': editing, 'form-control-plaintext': !editing}"
             :disabled="!editing"
           >
@@ -178,12 +174,12 @@
         <div class="form-group">
           <label>Server Port</label>
           <input
-            v-model.trim="$v.instance.variables.server_port.$model"
-            :class="{'is-invalid': $v.instance.variables.server_port.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.server_port.$model"
+            :class="{'is-invalid': $v.data.variables.server_port.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.server_port.required"
+            v-if="!$v.data.variables.server_port.required"
             class="invalid-feedback"
           >
             Field is required
@@ -193,12 +189,12 @@
         <div class="form-group">
           <label>Path</label>
           <input
-            v-model.trim="$v.instance.path.$model"
-            :class="{'is-invalid': $v.instance.path.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.path.$model"
+            :class="{'is-invalid': $v.data.path.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.path.required"
+            v-if="!$v.data.path.required"
             class="invalid-feedback"
           >
             Field is required
@@ -212,12 +208,12 @@
         <div class="form-group">
           <label>JWT Secret</label>
           <input
-            v-model.trim="$v.instance.variables.jwt_secret.$model"
-            :class="{'is-invalid': $v.instance.variables.jwt_secret.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.jwt_secret.$model"
+            :class="{'is-invalid': $v.data.variables.jwt_secret.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.jwt_secret.required"
+            v-if="!$v.data.variables.jwt_secret.required"
             class="invalid-feedback"
           >
             Field is required
@@ -231,7 +227,7 @@
         <div class="form-group">
           <label>Type</label>
           <select
-            v-model="instance.variables.repository_type"
+            v-model="data.variables.repository_type"
             :class="{'form-control': editing, 'form-control-plaintext': !editing}"
             :disabled="!editing"
           >
@@ -254,17 +250,17 @@
         </div>
 
         <div
-          v-if="instance.variables.repository_type === 2"
+          v-if="data.variables.repository_type === 2"
           class="form-group"
         >
           <label>Native Directory</label>
           <input
-            v-model.trim="$v.instance.variables.repository_native_dir.$model"
-            :class="{'is-invalid': $v.instance.variables.repository_native_dir.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.repository_native_dir.$model"
+            :class="{'is-invalid': $v.data.variables.repository_native_dir.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.repository_native_dir.required"
+            v-if="!$v.data.variables.repository_native_dir.required"
             class="invalid-feedback"
           >
             Field is required
@@ -272,17 +268,17 @@
         </div>
 
         <div
-          v-if="instance.variables.repository_type === 3"
+          v-if="data.variables.repository_type === 3"
           class="form-group"
         >
           <label>AllegroGraph URL</label>
           <input
-            v-model.trim="$v.instance.variables.repository_agraph_url.$model"
-            :class="{'is-invalid': $v.instance.variables.repository_agraph_url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.repository_agraph_url.$model"
+            :class="{'is-invalid': $v.data.variables.repository_agraph_url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.repository_agraph_url.required"
+            v-if="!$v.data.variables.repository_agraph_url.required"
             class="invalid-feedback"
           >
             Field is required
@@ -290,17 +286,17 @@
         </div>
 
         <div
-          v-if="instance.variables.repository_type === 3"
+          v-if="data.variables.repository_type === 3"
           class="form-group"
         >
           <label>AllegroGraph Password</label>
           <input
-            v-model.trim="$v.instance.variables.repository_agraph_password.$model"
-            :class="{'is-invalid': $v.instance.variables.repository_agraph_password.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.repository_agraph_password.$model"
+            :class="{'is-invalid': $v.data.variables.repository_agraph_password.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.repository_agraph_password.required"
+            v-if="!$v.data.variables.repository_agraph_password.required"
             class="invalid-feedback"
           >
             Field is required
@@ -308,17 +304,17 @@
         </div>
 
         <div
-          v-if="instance.variables.repository_type === 4"
+          v-if="data.variables.repository_type === 4"
           class="form-group"
         >
           <label>GraphDB URL</label>
           <input
-            v-model.trim="$v.instance.variables.repository_graphDb_url.$model"
-            :class="{'is-invalid': $v.instance.variables.repository_graphDb_url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.repository_graphDb_url.$model"
+            :class="{'is-invalid': $v.data.variables.repository_graphDb_url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.repository_graphDb_url.required"
+            v-if="!$v.data.variables.repository_graphDb_url.required"
             class="invalid-feedback"
           >
             Field is required
@@ -326,17 +322,17 @@
         </div>
 
         <div
-          v-if="instance.variables.repository_type === 4"
+          v-if="data.variables.repository_type === 4"
           class="form-group"
         >
           <label>GraphDB Repository</label>
           <input
-            v-model.trim="$v.instance.variables.repository_graphDb_repository.$model"
-            :class="{'is-invalid': $v.instance.variables.repository_graphDb_repository.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.repository_graphDb_repository.$model"
+            :class="{'is-invalid': $v.data.variables.repository_graphDb_repository.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.repository_graphDb_repository.required"
+            v-if="!$v.data.variables.repository_graphDb_repository.required"
             class="invalid-feedback"
           >
             Field is required
@@ -344,17 +340,17 @@
         </div>
 
         <div
-          v-if="instance.variables.repository_type === 5"
+          v-if="data.variables.repository_type === 5"
           class="form-group"
         >
           <label>Blazegraph Repository</label>
           <input
-            v-model.trim="$v.instance.variables.repository_blazegraph_repository.$model"
-            :class="{'is-invalid': $v.instance.variables.repository_blazegraph_repository.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.repository_blazegraph_repository.$model"
+            :class="{'is-invalid': $v.data.variables.repository_blazegraph_repository.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.repository_blazegraph_repository.required"
+            v-if="!$v.data.variables.repository_blazegraph_repository.required"
             class="invalid-feedback"
           >
             Field is required
@@ -362,17 +358,17 @@
         </div>
 
         <div
-          v-if="instance.variables.repository_type === 5"
+          v-if="data.variables.repository_type === 5"
           class="form-group"
         >
           <label>Blazegraph Repository</label>
           <input
-            v-model.trim="$v.instance.variables.repository_blazegraph_url.$model"
-            :class="{'is-invalid': $v.instance.variables.repository_blazegraph_url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.repository_blazegraph_url.$model"
+            :class="{'is-invalid': $v.data.variables.repository_blazegraph_url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.repository_blazegraph_url.required"
+            v-if="!$v.data.variables.repository_blazegraph_url.required"
             class="invalid-feedback"
           >
             Field is required
@@ -386,12 +382,12 @@
         <div class="form-group">
           <label>Root Specs</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_rootSpecs.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_rootSpecs.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_rootSpecs.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_rootSpecs.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_rootSpecs.required"
+            v-if="!$v.data.variables.metadata_rootSpecs.required"
             class="invalid-feedback"
           >
             Field is required
@@ -401,12 +397,12 @@
         <div class="form-group">
           <label>Catalog Specs</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_catalogSpecs.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_catalogSpecs.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_catalogSpecs.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_catalogSpecs.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_catalogSpecs.required"
+            v-if="!$v.data.variables.metadata_catalogSpecs.required"
             class="invalid-feedback"
           >
             Field is required
@@ -416,12 +412,12 @@
         <div class="form-group">
           <label>Dataset Specs</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_datasetSpecs.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_datasetSpecs.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_datasetSpecs.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_datasetSpecs.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_datasetSpecs.required"
+            v-if="!$v.data.variables.metadata_datasetSpecs.required"
             class="invalid-feedback"
           >
             Field is required
@@ -431,12 +427,12 @@
         <div class="form-group">
           <label>Distribution Specs</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_distributionSpecs.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_distributionSpecs.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_distributionSpecs.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_distributionSpecs.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_distributionSpecs.required"
+            v-if="!$v.data.variables.metadata_distributionSpecs.required"
             class="invalid-feedback"
           >
             Field is required
@@ -446,12 +442,12 @@
         <div class="form-group">
           <label>Publisher URI</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_publisherURI.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_publisherURI.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_publisherURI.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_publisherURI.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_publisherURI.required"
+            v-if="!$v.data.variables.metadata_publisherURI.required"
             class="invalid-feedback"
           >
             Field is required
@@ -461,12 +457,12 @@
         <div class="form-group">
           <label>Publisher Name</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_publisherName.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_publisherName.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_publisherName.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_publisherName.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_publisherName.required"
+            v-if="!$v.data.variables.metadata_publisherName.required"
             class="invalid-feedback"
           >
             Field is required
@@ -476,12 +472,12 @@
         <div class="form-group">
           <label>Language</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_language.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_language.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_language.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_language.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_language.required"
+            v-if="!$v.data.variables.metadata_language.required"
             class="invalid-feedback"
           >
             Field is required
@@ -491,12 +487,12 @@
         <div class="form-group">
           <label>License</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_license.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_license.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_license.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_license.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_license.required"
+            v-if="!$v.data.variables.metadata_license.required"
             class="invalid-feedback"
           >
             Field is required
@@ -506,12 +502,12 @@
         <div class="form-group">
           <label>Access Rights Descritption</label>
           <input
-            v-model.trim="$v.instance.variables.metadata_accessRightsDescription.$model"
-            :class="{'is-invalid': $v.instance.variables.metadata_accessRightsDescription.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.metadata_accessRightsDescription.$model"
+            :class="{'is-invalid': $v.data.variables.metadata_accessRightsDescription.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.metadata_accessRightsDescription.required"
+            v-if="!$v.data.variables.metadata_accessRightsDescription.required"
             class="invalid-feedback"
           >
             Field is required
@@ -526,12 +522,12 @@
         <div class="form-group">
           <label>FDP Submit URL</label>
           <input
-            v-model.trim="$v.instance.variables.fairSearch_fdpSubmitUrl.$model"
-            :class="{'is-invalid': $v.instance.variables.fairSearch_fdpSubmitUrl.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.fairSearch_fdpSubmitUrl.$model"
+            :class="{'is-invalid': $v.data.variables.fairSearch_fdpSubmitUrl.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.fairSearch_fdpSubmitUrl.required"
+            v-if="!$v.data.variables.fairSearch_fdpSubmitUrl.required"
             class="invalid-feedback"
           >
             Field is required
@@ -545,7 +541,7 @@
         <div class="form-group">
           <label>Type</label>
           <select
-            v-model="instance.variables.pidSystem_type"
+            v-model="data.variables.pidSystem_type"
             :class="{'form-control': editing, 'form-control-plaintext': !editing}"
             :disabled="!editing"
           >
@@ -559,17 +555,17 @@
         </div>
 
         <div
-          v-if="instance.variables.pidSystem_type === 2"
+          v-if="data.variables.pidSystem_type === 2"
           class="form-group"
         >
           <label>PURL Base URL</label>
           <input
-            v-model.trim="$v.instance.variables.pidSystem_purl_baseUrl.$model"
-            :class="{'is-invalid': $v.instance.variables.pidSystem_purl_baseUrl.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            v-model.trim="$v.data.variables.pidSystem_purl_baseUrl.$model"
+            :class="{'is-invalid': $v.data.variables.pidSystem_purl_baseUrl.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
             :readonly="!editing"
           >
           <p
-            v-if="!$v.instance.variables.pidSystem_purl_baseUrl.required"
+            v-if="!$v.data.variables.pidSystem_purl_baseUrl.required"
             class="invalid-feedback"
           >
             Field is required
@@ -583,7 +579,7 @@
         <div class="form-group">
           <label>Customizations</label>
           <prism-editor
-            v-model="instance.variables.scss_customizations"
+            v-model="data.variables.scss_customizations"
             language="scss"
             :readonly="!editing"
           />
@@ -592,7 +588,7 @@
         <div class="form-group">
           <label>Extra Styles</label>
           <prism-editor
-            v-model="instance.variables.scss_extra"
+            v-model="data.variables.scss_extra"
             language="scss"
             :readonly="!editing"
           />
@@ -607,7 +603,7 @@ import axios from 'axios'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import PrismEditor from 'vue-prism-editor'
-import DetailHeader from '../components/DetailHeader'
+import DetailHeader from '../components/detail/DetailHeader'
 
 import {
   getInstance,
@@ -618,6 +614,11 @@ import {
   getServers,
   getApplications, disposeInstance
 } from '../api'
+import cloneData from '../mixins/detail/cloneData'
+import editableData from '../mixins/detail/editableData'
+import fetchData from '../mixins/detail/fetchData'
+import removeData from '../mixins/detail/removeData'
+import Status from '../utils/Status'
 
 export default {
   name: 'InstanceDetail',
@@ -627,11 +628,17 @@ export default {
     PrismEditor
   },
 
-  mixins: [ validationMixin ],
+  mixins: [
+    validationMixin,
+    fetchData,
+    editableData,
+    removeData,
+    cloneData
+  ],
 
   validations() {
     return {
-      instance: {
+      data: {
         name: { required },
         url: { required },
         path: { required },
@@ -640,13 +647,13 @@ export default {
           server_image: { required },
           jwt_secret: { required },
           repository_type: { required },
-          repository_native_dir: this.instance.variables.repository_type === 2 ? { required } : {},
-          repository_agraph_url: this.instance.variables.repository_type === 3 ? { required } : {},
-          repository_agraph_password: this.instance.variables.repository_type === 3 ? { required } : {},
-          repository_graphDb_url: this.instance.variables.repository_type === 4 ? { required } : {},
-          repository_graphDb_repository: this.instance.variables.repository_type === 4 ? { required } : {},
-          repository_blazegraph_url: this.instance.variables.repository_type === 5 ? { required } : {},
-          repository_blazegraph_repository: this.instance.variables.repository_type === 5 ? { required } : {},
+          repository_native_dir: this.data.variables.repository_type === 2 ? { required } : {},
+          repository_agraph_url: this.data.variables.repository_type === 3 ? { required } : {},
+          repository_agraph_password: this.data.variables.repository_type === 3 ? { required } : {},
+          repository_graphDb_url: this.data.variables.repository_type === 4 ? { required } : {},
+          repository_graphDb_repository: this.data.variables.repository_type === 4 ? { required } : {},
+          repository_blazegraph_url: this.data.variables.repository_type === 5 ? { required } : {},
+          repository_blazegraph_repository: this.data.variables.repository_type === 5 ? { required } : {},
           metadata_rootSpecs: { required },
           metadata_catalogSpecs: { required },
           metadata_datasetSpecs: { required },
@@ -657,7 +664,7 @@ export default {
           metadata_license: { required },
           metadata_accessRightsDescription: { required },
           fairSearch_fdpSubmitUrl: { required },
-          pidSystem_purl_baseUrl: this.instance.variables.pidSystem_type === 2 ? { required } : {},
+          pidSystem_purl_baseUrl: this.data.variables.pidSystem_type === 2 ? { required } : {},
         }
       }
     }
@@ -665,32 +672,22 @@ export default {
 
   data() {
     return {
-      instanceName: 'Instance',
-      loading: false,
-      instance: null,
+      data: null,
       servers: null,
-      applications: null,
-      error: null,
-      editing: false,
-      submitStatus: null,
-      deployStatus: null,
-      deleteStatus: null,
-      cloneStatus: null
+      deployStatus: new Status(),
     }
   },
 
-  watch: {
-    '$route': 'fetchData'
-  },
-
-  created() {
-    this.fetchData()
-  },
-
   methods: {
+    getData: getInstance,
+    putData: putInstance,
+    deleteData: deleteInstance,
+    cloneData: cloneInstance,
+    removeRedirectLocation: () => '/instances',
+    cloneRedirectLocation: id => `/instances/${id}`,
+
     fetchData() {
-      this.error = this.instance = null
-      this.loading = true
+      this.status.setPending()
 
       const promises = [
         getInstance(this.$route.params.id),
@@ -699,77 +696,38 @@ export default {
       ]
 
       axios.all(promises)
-        .then(([ instance, servers, applications ]) => {
-          this.instance = instance.data
-          this.instanceName = this.instance.name
+        .then(([ data, servers, applications ]) => {
+          this.data = data.data
+          this.dataName = this.data.name
           this.servers = servers.data
           this.applications = applications.data
+          this.status.setDone()
         })
-        .catch(error => this.error = error.toString())
-        .finally(() => this.loading = false)
+        .catch(error => this.status.setError(error.toString()))
     },
 
     anyPending() {
-      return this.submitStatus === 'PENDING' || this.deployStatus === 'PENDING' || this.deleteStatus === 'PENDING' || this.cloneStatus === 'PENDING'
-    },
-
-    edit() {
-      this.editing = true
-    },
-
-    submit() {
-      this.$v.$touch()
-
-      if (this.$v.$invalid) {
-        this.submitStatus = 'INVALID'
-      } else {
-        this.submitStatus = 'PENDING'
-
-        putInstance(this.instance)
-          .then(() => {
-            this.submitStatus = 'SAVED'
-            this.editing = false
-            this.instanceName = this.instance.name
-          })
-          .catch(() => this.submitStatus = 'ERROR')
-      }
+      return this.status.isPending() || this.deployStatus.isPending()
     },
 
     deploy() {
-      this.deployStatus = 'PENDING'
+      this.deployStatus.setPending()
+      this.status.setPending()
 
-      deployInstance(this.instance)
-        .then(() => this.deployStatus = 'DONE')
-        .catch(() => this.deployStatus = 'ERROR')
+      deployInstance(this.data)
+        .then(() => this.status.setDone('Instance was successfully deployed.'))
+        .catch(() => this.status.setError('Deploy failed.'))
+        .finally(() => this.deployStatus.setDone())
 
     },
 
     dispose() {
-      if (window.confirm(`Are you sure you want to dispose ${this.instance.name}? (This will stop the running instance and remove it from the server)`))
-        this.deployStatus = 'PENDING'
+      if (window.confirm(`Are you sure you want to dispose ${this.data.name}? (This will stop the running data and remove it from the server)`)) {
+        this.status.setPending()
 
-      disposeInstance(this.instance)
-        .then(() => this.deployStatus = 'DONE')
-        .catch(() => this.deployStatus = 'ERROR')
-    },
-
-    instanceClone() {
-      this.cloneStatus = 'PENDING'
-      cloneInstance(this.instance)
-        .then(response => {
-          this.cloneStatus = null
-          this.$router.replace(`/instances/${response.data.uuid}`)
-        })
-        .catch(() => this.cloneStatus = 'ERROR')
-    },
-
-    instanceDelete() {
-      if (window.confirm(`Are you sure you want to delete ${this.instance.name}?`)) {
-        this.deleteStatus = 'PENDING'
-
-        deleteInstance(this.instance)
-          .then(() => this.$router.replace('/instances'))
-          .catch(() => this.deleteStatus = 'ERROR')
+        disposeInstance(this.data)
+          .then(() => this.status.setDone('Instance was successfully disposed.'))
+          .catch(() => this.status.setError('Dispose failed.'))
       }
     }
   }

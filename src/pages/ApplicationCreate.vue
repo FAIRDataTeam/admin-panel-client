@@ -137,7 +137,7 @@ import _ from 'lodash'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import { postApplication } from '../api'
-import DetailHeader from '../components/DetailHeader'
+import DetailHeader from '../components/detail/DetailHeader'
 import PrismEditor from 'vue-prism-editor'
 
 export default {

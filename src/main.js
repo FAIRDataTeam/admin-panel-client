@@ -15,9 +15,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './style.css'
 
 import App from './App.vue'
+import StatusFlash from './components/StatusFlash'
 import routes from './routes'
-import Loader from './components/Loader'
-import Error from './components/Error'
 import './initFontAwesome'
 
 Vue.config.productionTip = false
@@ -28,8 +27,7 @@ Vue.use(BootstrapVue)
 
 
 Vue.component('fa', FontAwesomeIcon)
-Vue.component('error', Error)
-Vue.component('loader', Loader)
+Vue.component('status-flash', StatusFlash)
 
 const router = new VueRouter({
   mode: 'history',

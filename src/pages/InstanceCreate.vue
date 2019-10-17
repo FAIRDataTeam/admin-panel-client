@@ -547,7 +547,7 @@
 import axios from 'axios'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
-import DetailHeader from '../components/DetailHeader'
+import DetailHeader from '../components/detail/DetailHeader'
 import PrismEditor from 'vue-prism-editor'
 
 import { postInstance, getApplications, getServers } from '../api'

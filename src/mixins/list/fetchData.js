@@ -1,11 +1,12 @@
+import Status from '../../utils/Status'
+
 export default {
   name: 'fetchData',
 
   data() {
     return {
-      loading: false,
+      status: new Status(),
       data: null,
-      error: null
     }
   },
 
@@ -23,13 +24,14 @@ export default {
     },
 
     fetchData() {
-      this.error = this.data = null
-      this.loading = true
+      this.status.setPending()
 
       this.getData()
-        .then(response => this.data = response.data)
-        .catch(error => this.error = error.toString())
-        .finally(() => this.loading = false)
+        .then(response => {
+          this.data = response.data
+          this.status.setDone()
+        })
+        .catch(error => this.status.setError(error.toString()))
     }
   }
 }

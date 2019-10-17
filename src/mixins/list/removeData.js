@@ -11,7 +11,7 @@ export default {
       if (window.confirm(`Are you sure you want to delete ${data.name}?`)) {
         this.deleteData(data)
           .then(() => this.fetchData())
-          .catch(() => this.error = `Unable to delete ${data.name}`)
+          .catch(() => this.status.setError(`Unable to delete ${data.name}`))
       }
     }
   }

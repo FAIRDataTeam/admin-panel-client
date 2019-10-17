@@ -5,8 +5,10 @@
       create-link="/servers/create"
     />
 
-    <loader v-if="loading" />
-    <error :message="error" />
+    <status-flash
+      :status="status"
+      :no-loading="data !== null"
+    />
 
     <list-table :data="data">
       <template v-slot:header>
@@ -42,7 +44,7 @@
             <template v-slot:button-content>
               <fa :icon="['fas', 'ellipsis-v']" />
             </template>
-            <b-dropdown-item @click="viewDetail(server)">
+            <b-dropdown-item @click="$router.replace(`/servers/${server.uuid}`)">
               <fa :icon="['far', 'file-alt']" />
               View detail
             </b-dropdown-item>
@@ -71,10 +73,10 @@
 
 <script>
 import { getServers, deleteServer } from '../api'
-import ListHeader from '../components/List/ListHeader'
-import ListTable from '../components/List/ListTable'
-import fetchData from '../mixins/fetchData'
-import removeData from '../mixins/removeData'
+import ListHeader from '../components/list/ListHeader'
+import ListTable from '../components/list/ListTable'
+import fetchData from '../mixins/list/fetchData'
+import removeData from '../mixins/list/removeData'
 
 export default {
   name: 'ServerList',

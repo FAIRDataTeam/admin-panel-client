@@ -110,7 +110,7 @@ import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
 import { postServer } from '../api'
-import DetailHeader from '../components/DetailHeader'
+import DetailHeader from '../components/detail/DetailHeader'
 
 export default {
   name: 'ServerCreate',
