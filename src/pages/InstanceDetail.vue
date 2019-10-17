@@ -57,6 +57,14 @@
         <b-dropdown-item
           :disabled="anyPending()"
           class="dropdown-item-danger"
+          @click="dispose"
+        >
+          <fa :icon="['fas', 'power-off']" />
+          Dispose
+        </b-dropdown-item>
+        <b-dropdown-item
+          :disabled="anyPending()"
+          class="dropdown-item-danger"
           @click="instanceDelete"
         >
           <fa :icon="['far', 'trash-alt']" />
@@ -608,7 +616,7 @@ import {
   deleteInstance,
   cloneInstance,
   getServers,
-  getApplications
+  getApplications, disposeInstance
 } from '../api'
 
 export default {
@@ -734,6 +742,15 @@ export default {
         .then(() => this.deployStatus = 'DONE')
         .catch(() => this.deployStatus = 'ERROR')
 
+    },
+
+    dispose() {
+      if (window.confirm(`Are you sure you want to dispose ${this.instance.name}? (This will stop the running instance and remove it from the server)`))
+        this.deployStatus = 'PENDING'
+
+      disposeInstance(this.instance)
+        .then(() => this.deployStatus = 'DONE')
+        .catch(() => this.deployStatus = 'ERROR')
     },
 
     instanceClone() {

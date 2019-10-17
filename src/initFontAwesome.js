@@ -15,6 +15,7 @@ library.add([
   fas.faPen,
   fas.faPlay,
   fas.faPlus,
+  fas.faPowerOff,
   fas.faSpinner,
   fas.faSyncAlt
 ])

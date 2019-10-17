@@ -32,6 +32,10 @@ export function deployInstance(instance) {
   return post(`/instances/${instance.uuid}/deployments`, {})
 }
 
+export function disposeInstance(instance) {
+  return deleteApi(`/instances/${instance.uuid}/deployments`)
+}
+
 export function cloneInstance(instance) {
   return post(`/instances?source=${instance.uuid}`, null)
 }
