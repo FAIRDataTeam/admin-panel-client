@@ -16,10 +16,15 @@ export default {
       this.editing = true
     },
 
-    submit() {
-      this.$v.$touch()
+    cancelEdit() {
+      this.editing = false
+      this.fetchData()
+    },
 
-      if (!this.$v.$invalid) {
+    submit() {
+      this.$v.data.$touch()
+
+      if (!this.$v.data.$invalid) {
         this.status.setPending()
         this.putData(this.data)
           .then(() => {

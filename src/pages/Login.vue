@@ -6,7 +6,10 @@
       </div>
       <div class="card-body">
         <form @submit.prevent="submit">
-          <error :message="submitStatus === 'ERROR' ? 'Login failed.' : null" />
+          <status-flash
+            :status="status"
+            no-loading
+          />
           <div class="form-group">
             <label>Email</label>
             <input
@@ -25,7 +28,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            :disabled="submitStatus === 'PENDING'"
+            :disabled="status.isPending()"
           >
             Log in
           </button>
@@ -37,6 +40,7 @@
 
 <script>
 import { fetchToken } from '../api'
+import Status from '../utils/Status'
 
 export default {
   name: 'Login',
@@ -45,19 +49,19 @@ export default {
     return {
       email: '',
       password: '',
-      submitStatus: null
+      status: new Status()
     }
   },
 
   methods: {
     submit() {
-      this.submitStatus = 'PENDING'
+      this.status.setPending()
 
       fetchToken(this.email, this.password)
         .then(response => {
           this.$emit('authenticated', response.data)
         })
-        .catch(() => this.submitStatus = 'ERROR')
+        .catch(() => this.status.setError('Login failed.'))
 
     }
   }

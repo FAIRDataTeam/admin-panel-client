@@ -1,15 +1,12 @@
 <template>
   <div class="detail-page">
-    <loader v-if="loading" />
-    <error :message="error" />
-
     <detail-header
-      v-if="ready"
+      v-if="ready()"
       title="Create Instance"
     >
       <button
         class="btn btn-outline-primary"
-        :disabled="submitStatus === 'PENDING'"
+        :disabled="status.isPending()"
         @click="submit"
       >
         <fa :icon="['far', 'save']" />
@@ -17,9 +14,13 @@
       </button>
     </detail-header>
 
+    <status-flash
+      :status="status"
+      :no-loading="ready()"
+    />
 
     <form
-      v-if="ready"
+      v-if="ready()"
       class="form"
       @submit.prevent="submit"
     >
@@ -53,6 +54,12 @@
             class="invalid-feedback"
           >
             Field is required
+          </p>
+          <p
+            v-if="!$v.instance.url.url"
+            class="invalid-feedback"
+          >
+            This is not a valid URL.
           </p>
         </div>
 
@@ -546,11 +553,12 @@
 <script>
 import axios from 'axios'
 import { validationMixin } from 'vuelidate'
-import { required } from 'vuelidate/lib/validators'
+import { required, url } from 'vuelidate/lib/validators'
 import DetailHeader from '../components/detail/DetailHeader'
 import PrismEditor from 'vue-prism-editor'
 
 import { postInstance, getApplications, getServers } from '../api'
+import Status from '../utils/Status'
 
 export default {
   name: 'Instance',
@@ -566,7 +574,7 @@ export default {
     return {
       instance: {
         name: { required },
-        url: { required },
+        url: { required, url },
         path: { required },
         applicationUuid: { required },
         serverUuid: { required },
@@ -603,8 +611,7 @@ export default {
     return {
       servers: null,
       applications: null,
-      ready: false,
-      loading: false,
+      status: new Status(),
       instance: {
         name: '',
         url: '',
@@ -613,6 +620,7 @@ export default {
         serverUuid: '',
         variables: {
           server_port: '',
+          server_image: '',
           jwt_secret: '',
           repository_type: 1,
           repository_native_dir: '',
@@ -635,9 +643,7 @@ export default {
           pidSystem_type: 1,
           pidSystem_purl_baseUrl: '',
         }
-      },
-      error: null,
-      submitStatus: null
+      }
     }
   },
 
@@ -651,8 +657,7 @@ export default {
 
   methods: {
     fetchData() {
-      this.error = null
-      this.loading = true
+      this.status.setPending()
 
       const promises = [
         getServers(),
@@ -663,23 +668,24 @@ export default {
         .then(([ servers, applications ]) => {
           this.servers = servers.data
           this.applications = applications.data
-          this.ready = true
+          this.status.setDone()
         })
-        .catch(error => this.error = error.toString())
-        .finally(() => this.loading = false)
+        .catch(() => this.status.setError('Unable to load applications and/or servers data.'))
+    },
+
+    ready() {
+      return !!(this.servers && this.applications)
     },
 
     submit() {
       this.$v.$touch()
 
-      if (this.$v.$invalid) {
-        this.submitStatus = 'INVALID'
-      } else {
-        this.submitStatus = 'PENDING'
+      if (!this.$v.$invalid) {
+        this.status.setPending()
 
         postInstance(this.instance)
           .then(response => this.$router.replace(`/instances/${response.data.uuid}`))
-          .catch(() => this.submitStatus = 'ERROR')
+          .catch(() => this.status.setError('Unable to create a new application'))
       }
     }
   }

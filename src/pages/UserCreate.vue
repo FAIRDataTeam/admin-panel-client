@@ -1,6 +1,6 @@
 <template>
   <div class="detail-page">
-    <detail-header title="Create Server">
+    <detail-header title="Create User">
       <button
         class="btn btn-outline-primary"
         :disabled="status.isPending()"
@@ -26,12 +26,12 @@
         <div class="form-group">
           <label>Name</label>
           <input
-            v-model.trim="$v.server.name.$model"
+            v-model.trim="$v.user.name.$model"
             class="form-control"
-            :class="{'is-invalid': $v.server.name.$error}"
+            :class="{'is-invalid': $v.user.name.$error}"
           >
           <p
-            v-if="!$v.server.name.required"
+            v-if="!$v.user.name.required"
             class="invalid-feedback"
           >
             Field is required
@@ -39,49 +39,40 @@
         </div>
 
         <div class="form-group">
-          <label>Hostname</label>
+          <label>Email</label>
           <input
-            v-model.trim="$v.server.hostname.$model"
+            v-model.trim="$v.user.email.$model"
             class="form-control"
-            :class="{'is-invalid': $v.server.hostname.$error}"
+            :class="{'is-invalid': $v.user.email.$error}"
           >
           <p
-            v-if="!$v.server.hostname.required"
+            v-if="!$v.user.email.required"
             class="invalid-feedback"
           >
             Field is required
           </p>
-        </div>
-
-        <div class="form-group">
-          <label>Username</label>
-          <input
-            v-model.trim="$v.server.username.$model"
-            class="form-control"
-            :class="{'is-invalid': $v.server.username.$error}"
-          >
           <p
-            v-if="!$v.server.username.required"
+            v-if="!$v.user.email.email"
             class="invalid-feedback"
           >
-            Field is required
+            This is not a valid email
           </p>
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>SSH Keys</legend>
+        <legend>Password</legend>
 
         <div class="form-group">
-          <label>Private Key</label>
-          <textarea
-            v-model.trim="$v.server.privateKey.$model"
+          <label>Password</label>
+          <input
+            v-model.trim="$v.user.password.$model"
             class="form-control"
-            rows="10"
-            :class="{'is-invalid': $v.server.privateKey.$error}"
-          />
+            :class="{'is-invalid': $v.user.password.$error}"
+            type="password"
+          >
           <p
-            v-if="!$v.server.privateKey.required"
+            v-if="!$v.user.password.required"
             class="invalid-feedback"
           >
             Field is required
@@ -89,35 +80,33 @@
         </div>
 
         <div class="form-group">
-          <label>Public Key</label>
-          <textarea
-            v-model.trim="$v.server.publicKey.$model"
+          <label>Password confirmation</label>
+          <input
+            v-model.trim="$v.user.passwordCheck.$model"
             class="form-control"
-            rows="5"
-            :class="{'is-invalid': $v.server.publicKey.$error}"
-          />
+            :class="{'is-invalid': $v.user.passwordCheck.$error}"
+            type="password"
+          >
           <p
-            v-if="!$v.server.publicKey.required"
+            v-if="!$v.user.passwordCheck.passwordMatch"
             class="invalid-feedback"
           >
-            Field is required
+            Passwords don't match.
           </p>
         </div>
       </fieldset>
     </form>
   </div>
 </template>
-
 <script>
 import { validationMixin } from 'vuelidate'
-import { required } from 'vuelidate/lib/validators'
-
-import { postServer } from '../api'
+import { required, email } from 'vuelidate/src/validators'
+import { postUser } from '../api'
 import DetailHeader from '../components/detail/DetailHeader'
 import Status from '../utils/Status'
 
 export default {
-  name: 'ServerCreate',
+  name: 'UserCreate',
 
   components: {
     DetailHeader
@@ -127,26 +116,28 @@ export default {
 
   validations() {
     return {
-      server: {
+      user: {
         name: { required },
-        hostname: { required },
-        username: { required },
-        privateKey: { required },
-        publicKey: { required },
+        email: { required, email },
+        password: { required },
+        passwordCheck: {
+          passwordMatch(value) {
+            return this.user.password === value
+          }
+        }
       }
     }
   },
 
   data() {
     return {
-      server: {
+      user: {
         name: '',
-        hostname: '',
-        username: '',
-        privateKey: '',
-        publicKey: ''
+        email: '',
+        password: '',
+        passwordCheck: ''
       },
-      status: new Status(),
+      status: new Status()
     }
   },
 
@@ -156,9 +147,9 @@ export default {
 
       if (!this.$v.$invalid) {
         this.status.setPending()
-        postServer(this.server)
-          .then(response => this.$router.replace(`/servers/${response.data.uuid}`))
-          .catch(() => this.status.setError('Unable to create a new server.'))
+        postUser(this.user)
+          .then(response => this.$router.replace(`/users/${response.data.uuid}`))
+          .catch(() => this.status.setError('Unable to create a new user.'))
       }
     }
   }

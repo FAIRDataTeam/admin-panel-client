@@ -35,6 +35,11 @@
   color: #dc3545 !important;
 }
 
+.dropdown-item-danger a:active {
+  color: #fff !important;
+  background: #dc3545 !important;
+}
+
 
 /* Tables */
 

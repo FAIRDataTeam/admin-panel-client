@@ -44,6 +44,14 @@
                 Applications
               </router-link>
             </b-nav-item>
+            <b-nav-item>
+              <router-link
+                class="nav-link"
+                to="/users"
+              >
+                Users
+              </router-link>
+            </b-nav-item>
           </b-navbar-nav>
 
           <b-navbar-nav
@@ -56,6 +64,7 @@
                 to="/login"
                 @click.native="logout()"
               >
+                <fa :icon="['fas', 'sign-out-alt']" />
                 Logout
               </router-link>
             </b-nav-item>
@@ -63,51 +72,6 @@
         </b-collapse>
       </b-container>
     </b-navbar>
-    <!--    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">-->
-    <!--      <div class="container">-->
-    <!--        <router-link-->
-    <!--          class="navbar-brand"-->
-    <!--          to="/instances"-->
-    <!--        >-->
-    <!--          FDP Admin Panel-->
-    <!--        </router-link>-->
-    <!--        <ul-->
-    <!--          v-if="authenticated"-->
-    <!--          class="navbar-nav mr-auto ml-5"-->
-    <!--        >-->
-    <!--          <li class="nav-item">-->
-    <!--            <router-link-->
-    <!--              class="nav-link"-->
-    <!--              to="/instances"-->
-    <!--            >-->
-    <!--              Instances-->
-    <!--            </router-link>-->
-    <!--          </li>-->
-    <!--          <li class="nav-item">-->
-    <!--            <router-link-->
-    <!--              class="nav-link"-->
-    <!--              to="/servers"-->
-    <!--            >-->
-    <!--              Servers-->
-    <!--            </router-link>-->
-    <!--          </li>-->
-    <!--        </ul>-->
-    <!--        <ul-->
-    <!--          v-if="authenticated"-->
-    <!--          class="navbar-nav"-->
-    <!--        >-->
-    <!--          <li class="nav-item">-->
-    <!--            <router-link-->
-    <!--              class="nav-link"-->
-    <!--              to="/login"-->
-    <!--              @click.native="logout()"-->
-    <!--            >-->
-    <!--              Logout-->
-    <!--            </router-link>-->
-    <!--          </li>-->
-    <!--        </ul>-->
-    <!--      </div>-->
-    <!--    </nav>-->
 
     <div class="container">
       <router-view @authenticated="setAuthenticated" />

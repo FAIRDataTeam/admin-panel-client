@@ -13,6 +13,15 @@
         <fa :icon="['far', 'save']" />
         Save
       </button>
+      <button
+        v-if="editing"
+        class="btn btn-outline-secondary"
+        :disabled="status.isPending()"
+        @click="cancelEdit"
+      >
+        <fa :icon="['fas', 'ban']" />
+        Cancel
+      </button>
 
       <b-dropdown
         v-if="!editing"

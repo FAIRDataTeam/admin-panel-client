@@ -5,6 +5,25 @@
       :title="dataName"
     >
       <button
+        v-if="editing"
+        class="btn btn-outline-primary"
+        :disabled="anyPending()"
+        @click="submit"
+      >
+        <fa :icon="['far', 'save']" />
+        Save
+      </button>
+      <button
+        v-if="editing"
+        class="btn btn-outline-secondary"
+        :disabled="status.isPending()"
+        @click="cancelEdit"
+      >
+        <fa :icon="['fas', 'ban']" />
+        Cancel
+      </button>
+
+      <button
         v-if="!editing"
         class="btn btn-outline-primary"
         :disabled="anyPending()"
@@ -20,16 +39,6 @@
           :icon="['fas', 'play']"
         />
         Deploy
-      </button>
-
-      <button
-        v-if="editing"
-        class="btn btn-outline-primary"
-        :disabled="anyPending()"
-        @click="submit"
-      >
-        <fa :icon="['far', 'save']" />
-        Save
       </button>
 
       <b-dropdown
@@ -115,6 +124,12 @@
             class="invalid-feedback"
           >
             Field is required
+          </p>
+          <p
+            v-if="!$v.data.url.url"
+            class="invalid-feedback"
+          >
+            This is not a valid URL.
           </p>
         </div>
 
@@ -601,7 +616,7 @@
 <script>
 import axios from 'axios'
 import { validationMixin } from 'vuelidate'
-import { required } from 'vuelidate/lib/validators'
+import { required, url } from 'vuelidate/lib/validators'
 import PrismEditor from 'vue-prism-editor'
 import DetailHeader from '../components/detail/DetailHeader'
 
@@ -640,7 +655,7 @@ export default {
     return {
       data: {
         name: { required },
-        url: { required },
+        url: { required, url },
         path: { required },
         variables: {
           server_port: { required },
@@ -672,7 +687,7 @@ export default {
 
   data() {
     return {
-      data: null,
+      applications: null,
       servers: null,
       deployStatus: new Status(),
     }

@@ -84,6 +84,30 @@ export function cloneApplication(application) {
   return post(`/applications?source=${application.uuid}`, null)
 }
 
+export function getUsers() {
+  return get('/users')
+}
+
+export function getUser(uuid) {
+  return get(`/users/${uuid}`)
+}
+
+export function postUser(user) {
+  return post('/users', user)
+}
+
+export function putUser(user) {
+  return put(`/users/${user.uuid}`, user)
+}
+
+export function deleteUser(user) {
+  return deleteApi(`/users/${user.uuid}`)
+}
+
+export function putUserPassword(user, password) {
+  return put(`/users/${user.uuid}/password`, { password })
+}
+
 function get(url) {
   return axios.get(`${apiUrl}${url}`, {
     headers: { Authorization: 'Bearer ' + getUserToken() }

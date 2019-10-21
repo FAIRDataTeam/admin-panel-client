@@ -6,7 +6,7 @@
     >
       <button
         class="btn btn-outline-primary"
-        :disabled="submitStatus === 'PENDING'"
+        :disabled="status.isPending()"
         @click="submit"
       >
         <fa :icon="['far', 'save']" />
@@ -14,7 +14,10 @@
       </button>
     </detail-header>
 
-    <error :message="error" />
+    <status-flash
+      :status="status"
+      no-loading
+    />
 
     <form
       v-if="application"
@@ -139,6 +142,7 @@ import { required } from 'vuelidate/lib/validators'
 import { postApplication } from '../api'
 import DetailHeader from '../components/detail/DetailHeader'
 import PrismEditor from 'vue-prism-editor'
+import Status from '../utils/Status'
 
 export default {
   name: 'ApplicationDetail',
@@ -179,8 +183,7 @@ export default {
         disposeCommand: '',
         templates: []
       },
-      error: null,
-      submitStatus: null
+      status: new Status()
     }
   },
 
@@ -210,14 +213,12 @@ export default {
     submit() {
       this.$v.$touch()
 
-      if (this.$v.$invalid) {
-        this.submitStatus = 'INVALID'
-      } else {
-        this.submitStatus = 'PENDING'
+      if (!this.$v.$invalid) {
+        this.status.setPending()
 
         postApplication(this.application)
           .then(response => this.$router.replace(`/applications/${response.data.uuid}`))
-          .catch(() => this.submitStatus = 'ERROR')
+          .catch(() => this.status.setError('Unable to create a new application.'))
       }
     }
   }

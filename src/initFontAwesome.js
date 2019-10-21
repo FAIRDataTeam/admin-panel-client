@@ -12,10 +12,12 @@ library.add([
   fas.faCheck,
   fas.faEllipsisV,
   fas.faExclamationTriangle,
+  fas.faKey,
   fas.faPen,
   fas.faPlay,
   fas.faPlus,
   fas.faPowerOff,
+  fas.faSignOutAlt,
   fas.faSpinner,
   fas.faSyncAlt
 ])
