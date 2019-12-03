@@ -144,6 +144,21 @@
         </div>
 
         <div class="form-group">
+          <label>Server Path</label>
+          <input
+            v-model.trim="$v.instance.variables.server_path.$model"
+            class="form-control"
+            :class="{'is-invalid': $v.instance.variables.server_path.$error}"
+          >
+          <p
+            v-if="!$v.instance.variables.server_path.required"
+            class="invalid-feedback"
+          >
+            Field is required
+          </p>
+        </div>
+
+        <div class="form-group">
           <label>Path</label>
           <input
             v-model.trim="$v.instance.path.$model"
@@ -152,6 +167,25 @@
           >
           <p
             v-if="!$v.instance.path.required"
+            class="invalid-feedback"
+          >
+            Field is required
+          </p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Mongo DB</legend>
+
+        <div class="form-group">
+          <label>Mongo Port</label>
+          <input
+            v-model.trim="$v.instance.variables.mongo_port.$model"
+            class="form-control"
+            :class="{'is-invalid': $v.instance.variables.mongo_port.$error}"
+          >
+          <p
+            v-if="!$v.instance.variables.mongo_port.required"
             class="invalid-feedback"
           >
             Field is required
@@ -580,8 +614,10 @@ export default {
         serverUuid: { required },
         variables: {
           server_port: { required },
+          server_path: { required },
           server_image: { required },
           jwt_secret: { required },
+          mongo_port: { required },
           repository_type: { required },
           repository_native_dir: this.instance.variables.repository_type === 2 ? { required } : {},
           repository_agraph_url: this.instance.variables.repository_type === 3 ? { required } : {},

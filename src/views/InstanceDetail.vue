@@ -202,6 +202,21 @@
         </div>
 
         <div class="form-group">
+          <label>Server Path</label>
+          <input
+            v-model.trim="$v.data.variables.server_path.$model"
+            :class="{'is-invalid': $v.data.variables.server_path.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            :readonly="!editing"
+          >
+          <p
+            v-if="!$v.data.variables.server_path.required"
+            class="invalid-feedback"
+          >
+            Field is required
+          </p>
+        </div>
+
+        <div class="form-group">
           <label>Path</label>
           <input
             v-model.trim="$v.data.path.$model"
@@ -210,6 +225,25 @@
           >
           <p
             v-if="!$v.data.path.required"
+            class="invalid-feedback"
+          >
+            Field is required
+          </p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Mongo DB</legend>
+
+        <div class="form-group">
+          <label>Mongo Port</label>
+          <input
+            v-model.trim="$v.data.variables.mongo_port.$model"
+            :class="{'is-invalid': $v.data.variables.mongo_port.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            :readonly="!editing"
+          >
+          <p
+            v-if="!$v.data.variables.mongo_port.required"
             class="invalid-feedback"
           >
             Field is required
@@ -659,8 +693,10 @@ export default {
         path: { required },
         variables: {
           server_port: { required },
+          server_path: { required },
           server_image: { required },
           jwt_secret: { required },
+          mongo_port: { required },
           repository_type: { required },
           repository_native_dir: this.data.variables.repository_type === 2 ? { required } : {},
           repository_agraph_url: this.data.variables.repository_type === 3 ? { required } : {},
