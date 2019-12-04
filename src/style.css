@@ -64,9 +64,11 @@
 
 .form .form-control-plaintext {
   outline: none;
-  padding: 0.375rem 0.75rem;
-  background: #f5f2f0;
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  padding: 0.375rem 0;
+}
+
+.form .form-control-plaintext--bold {
+  font-weight: bold;
 }
 
 .form select.form-control-plaintext {
@@ -94,6 +96,10 @@
 .form fieldset legend {
   width: auto;
   padding: 0 .5rem
+}
+
+.form fieldset label {
+  font-weight: bold;
 }
 
 

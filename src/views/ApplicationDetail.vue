@@ -134,7 +134,7 @@
             <div class="file-name">
               <input
                 v-model.trim="v.name.$model"
-                :class="{'is-invalid':v.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+                :class="{'is-invalid':v.name.$error, 'form-control': editing, 'form-control-plaintext form-control-plaintext--bold': !editing}"
                 :readonly="!editing"
               >
               <button
