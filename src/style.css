@@ -102,6 +102,17 @@
   font-weight: bold;
 }
 
+.prism-editor-wrapper pre {
+  border-radius: 0.25rem;
+}
+
+.prism-editor-wrapper.is-invalid pre {
+  border: 1px solid #dc3545;
+}
+
+.prism-editor-wrapper.is-invalid ~ .invalid-feedback {
+  display: block;
+}
 
 /* Extra styles */
 

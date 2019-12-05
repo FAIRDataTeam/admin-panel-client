@@ -44,6 +44,31 @@
       </fieldset>
 
       <fieldset>
+        <legend>Variables</legend>
+
+        <div class="form-group">
+          <label>Form Spec</label>
+          <prism-editor
+            v-model="$v.application.formSpec.$model"
+            language="json"
+            :class="{'is-invalid': $v.application.formSpec.$error}"
+          />
+          <p
+            v-if="!$v.application.formSpec.required"
+            class="invalid-feedback"
+          >
+            Field is required
+          </p>
+          <p
+            v-else-if="!$v.application.formSpec.isJson"
+            class="invalid-feedback"
+          >
+            This is not a valid JSON
+          </p>
+        </div>
+      </fieldset>
+
+      <fieldset>
         <legend>Commands</legend>
 
         <div class="form-group">
@@ -158,6 +183,7 @@ export default {
     return {
       application: {
         name: { required },
+        formSpec: { required },
         deployCommand: { required },
         disposeCommand: { required },
         templates: {
@@ -179,6 +205,7 @@ export default {
     return {
       application: {
         name: '',
+        formSpec: '',
         deployCommand: '',
         disposeCommand: '',
         templates: []
