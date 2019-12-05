@@ -178,7 +178,7 @@
 </template>
 <script>
 import { required, email } from 'vuelidate/lib/validators'
-import { deleteUser, getUser, putUser, putUserPassword } from '../api'
+import api from '../api'
 import DetailHeader from '../components/detail/DetailHeader'
 import editableData from '../mixins/detail/editableData'
 import fetchData from '../mixins/detail/fetchData'
@@ -222,9 +222,9 @@ export default {
   },
 
   methods: {
-    getData: getUser,
-    putData: putUser,
-    deleteData: deleteUser,
+    getData: api.users.getUser,
+    putData: api.users.putUser,
+    deleteData: api.users.deleteUser,
     redirectLocation: () => '/users',
     changePassword() {
       this.editingPassword = true
@@ -232,17 +232,18 @@ export default {
     cancelPassword() {
       this.editingPassword = false
     },
-    submitPassword() {
+    async submitPassword() {
       this.$v.passwordForm.$touch()
 
       if (!this.$v.passwordForm.$invalid) {
-        this.status.setPending()
-        putUserPassword(this.data, this.passwordForm.password)
-          .then(() => {
-            this.status.setDone()
-            this.editingPassword = false
-          })
-          .catch(() => this.status.setError('Unable to change password.'))
+        try {
+          this.status.setPending()
+          await api.users.putUserPassword(this.data, this.passwordForm.password)
+          this.status.setDone()
+          this.editingPassword = false
+        } catch (error) {
+          this.status.setError('Unable to change password.')
+        }
       }
     }
   }

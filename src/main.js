@@ -14,6 +14,7 @@ import './style.css'
 import App from './App.vue'
 import StatusFlash from './components/StatusFlash'
 import router from './router'
+import store from './store'
 import './initFontAwesome'
 
 Vue.config.productionTip = false
@@ -26,6 +27,7 @@ Vue.component('fa', FontAwesomeIcon)
 Vue.component('status-flash', StatusFlash)
 
 new Vue({
+  router,
+  store,
   render: h => h(App),
-  router
 }).$mount('#app')

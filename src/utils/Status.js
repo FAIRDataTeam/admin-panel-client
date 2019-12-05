@@ -9,50 +9,58 @@ export default class Status {
     this.clear()
   }
 
+  setStatus(status, msg) {
+    this.status = status
+    this.msg = msg
+  }
+
+  get message() {
+    return this.msg
+  }
+
   isPending() {
-    return this._status === PENDING
+    return this.status === PENDING
   }
 
   isDefault() {
-    return this._status === DEFAULT;
+    return this.status === DEFAULT;
   }
 
   isError() {
-    return this._status === ERROR
+    return this.status === ERROR
   }
 
   isSuccess() {
-    return this._status === SUCCESS
-  }
-
-  get errorMsg() {
-    return this._errorMsg
-  }
-
-  get successMsg() {
-    return this._successMsg
+    return this.status === SUCCESS
   }
 
   setPending() {
     this.clear()
-    this._status = PENDING
+    this.status = PENDING
   }
 
   setError(msg) {
-    this._status = ERROR
-    this._errorMsg = msg
+    this.status = ERROR
+    this.msg = msg
+  }
+
+  setErrorFromResponse(error, defaultMsg) {
+    this.status = ERROR
+    this.msg = _.get(error, 'response.data.message', defaultMsg)
   }
 
   setDone(msg) {
-    this._successMsg = msg
-    this._status = msg ? SUCCESS : DEFAULT
+    this.msg = msg
+    this.status = msg ? SUCCESS : DEFAULT
   }
 
   clear() {
-    this._status = DEFAULT
-    this._errorMsg = null
-    this._successMsg = null
+    this.status = DEFAULT
+    this.msg = null
   }
-
-
 }
+
+Status.PENDING = PENDING
+Status.ERROR = ERROR
+Status.SUCCESS = SUCCESS
+Status.DEFAULT = DEFAULT

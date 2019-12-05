@@ -39,8 +39,7 @@
 </template>
 
 <script>
-import { fetchToken } from '../api'
-import Status from '../utils/Status'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Login',
@@ -49,20 +48,24 @@ export default {
     return {
       email: '',
       password: '',
-      status: new Status()
     }
+  },
+
+  computed: {
+    ...mapState('auth', {
+      status: 'loginStatus'
+    })
   },
 
   methods: {
     submit() {
-      this.status.setPending()
+      if (!this.email || !this.password) return
 
-      fetchToken(this.email, this.password)
-        .then(response => {
-          this.$emit('authenticated', response.data)
-        })
-        .catch(() => this.status.setError('Login failed.'))
-
+      this.$store.dispatch('auth/authenticate', {
+        email: this.email,
+        password: this.password,
+        successCallback: () => this.$router.push('/')
+      })
     }
   }
 }

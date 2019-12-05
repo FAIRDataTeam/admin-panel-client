@@ -10,12 +10,15 @@ export default {
       // implemented in component that uses this mixin
     },
 
-    remove() {
+    async remove() {
       if (window.confirm(`Are you sure you want to delete ${this.data.name}?`)) {
-        this.status.setPending()
-        this.deleteData(this.data)
-          .then(() => this.$routes.replace(this.redirectLocation()))
-          .catch(() => this.status.setError(`Unable to delete ${this.data.name}`))
+        try {
+          this.status.setPending()
+          await this.deleteData(this.data)
+          await this.$routes.replace(this.redirectLocation())
+        } catch (error) {
+          this.status.setError(`Unable to delete ${this.data.name}`)
+        }
       }
     }
   }

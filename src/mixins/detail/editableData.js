@@ -21,18 +21,19 @@ export default {
       this.fetchData()
     },
 
-    submit() {
+    async submit() {
       this.$v.data.$touch()
 
       if (!this.$v.data.$invalid) {
-        this.status.setPending()
-        this.putData(this.data)
-          .then(() => {
-            this.status.setDone()
-            this.editing = false
-            this.dataName = this.data.name
-          })
-          .catch(() => this.status.setError(`Unable to save ${this.dataName}.`))
+        try {
+          this.status.setPending()
+          await this.putData(this.data)
+          this.status.setDone()
+          this.editing = false
+          this.dataName = this.data.name
+        } catch (error) {
+          this.status.setError(`Unable to save ${this.dataName}.`)
+        }
       }
     }
   }

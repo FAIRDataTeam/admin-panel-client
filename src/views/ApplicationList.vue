@@ -63,7 +63,7 @@
   </div>
 </template>
 <script>
-import { cloneApplication, deleteApplication, getApplications } from '../api'
+import api from '../api'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import cloneData from '../mixins/list/cloneData'
@@ -82,9 +82,9 @@ export default {
     cloneData
   ],
   methods: {
-    getData: getApplications,
-    deleteData: deleteApplication,
-    cloneData: cloneApplication
+    getData: api.applications.getApplications,
+    deleteData: api.applications.deleteApplication,
+    cloneData: api.applications.cloneApplication
   }
 }
 </script>

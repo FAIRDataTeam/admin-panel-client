@@ -222,7 +222,7 @@
 import _ from 'lodash'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
-import { cloneApplication, deleteApplication, getApplication, putApplication } from '../api'
+import api from '../api'
 import DetailHeader from '../components/detail/DetailHeader'
 import PrismEditor from 'vue-prism-editor'
 import cloneData from '../mixins/detail/cloneData'
@@ -275,10 +275,10 @@ export default {
     }
   },
   methods: {
-    getData: getApplication,
-    putData: putApplication,
-    deleteData: deleteApplication,
-    cloneData: cloneApplication,
+    getData: api.applications.getApplication,
+    putData: api.applications.putApplication,
+    deleteData: api.applications.deleteApplication,
+    cloneData: api.applications.cloneApplication,
     removeRedirectLocation: () => '/applications',
     cloneRedirectLocation: id => `/applications/${id}`,
 

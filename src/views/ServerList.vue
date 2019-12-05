@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { getServers, deleteServer } from '../api'
+import api from '../api'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import fetchData from '../mixins/list/fetchData'
@@ -89,8 +89,8 @@ export default {
     removeData
   ],
   methods: {
-    getData: getServers,
-    deleteData: deleteServer
+    getData: api.servers.getServers,
+    deleteData: api.servers.deleteServer
   }
 }
 </script>

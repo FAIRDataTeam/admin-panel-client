@@ -24,16 +24,16 @@ export default {
       // implemented in component that uses this mixin
     },
 
-    fetchData() {
-      this.status.setPending()
-
-      this.getData(this.$route.params.id)
-        .then(response => {
-          this.data = response.data
-          this.dataName = this.data.name
-          this.status.setDone()
-        })
-        .catch(error => this.status.setError(error.toString()))
+    async fetchData() {
+      try {
+        this.status.setPending()
+        const response = await this.getData(this.$route.params.id)
+        this.data = response.data
+        this.dataName = this.data.name
+        this.status.setDone()
+      } catch (error) {
+        this.status.setError(error.toString())
+      }
     }
   }
 }

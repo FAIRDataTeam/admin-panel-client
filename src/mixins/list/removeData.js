@@ -7,11 +7,14 @@ export default {
       // implemented in component that uses this mixin
     },
 
-    remove(data) {
+    async remove(data) {
       if (window.confirm(`Are you sure you want to delete ${data.name}?`)) {
-        this.deleteData(data)
-          .then(() => this.fetchData())
-          .catch(() => this.status.setError(`Unable to delete ${data.name}`))
+        try {
+          await this.deleteData(data)
+          await this.fetchData()
+        } catch (error) {
+          this.status.setError(`Unable to delete ${data.name}`)
+        }
       }
     }
   }

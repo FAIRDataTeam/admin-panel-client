@@ -1,7 +1,7 @@
 <template>
   <div class="detail-page">
     <detail-header
-      v-if="ready()"
+      v-if="ready"
       title="Create Instance"
     >
       <button
@@ -18,11 +18,11 @@
 
     <status-flash
       :status="status"
-      :no-loading="ready()"
+      :no-loading="ready"
     />
 
     <InstanceForm
-      v-if="ready()"
+      v-if="ready"
       ref="form"
       :data="data"
       :applications="applications"
@@ -35,8 +35,7 @@
 <script>
 import axios from 'axios'
 import DetailHeader from '../components/detail/DetailHeader'
-
-import { postInstance, getApplications, getServers } from '../api'
+import api from '../api'
 import InstanceForm from '../components/InstanceForm'
 import Status from '../utils/Status'
 
@@ -64,6 +63,12 @@ export default {
     }
   },
 
+  computed: {
+    ready() {
+      return !!(this.servers && this.applications)
+    }
+  },
+
   watch: {
     '$route': 'fetchData'
   },
@@ -73,33 +78,31 @@ export default {
   },
 
   methods: {
-    fetchData() {
+    async fetchData() {
+      try {
+        this.status.setPending()
+
+        const requests = [
+          api.servers.getServers(),
+          api.applications.getApplications()
+        ]
+        const [servers, applications] = await axios.all(requests)
+        this.servers = servers.data
+        this.applications = applications.data
+        this.status.setDone()
+      } catch (error) {
+        this.status.setError('Unable to load applications and/or servers data.')
+      }
+    }
+  },
+
+  async submit() {
+    try {
       this.status.setPending()
-
-      const promises = [
-        getServers(),
-        getApplications()
-      ]
-
-      axios.all(promises)
-        .then(([servers, applications]) => {
-          this.servers = servers.data
-          this.applications = applications.data
-          this.status.setDone()
-        })
-        .catch(() => this.status.setError('Unable to load applications and/or servers data.'))
-    },
-
-    ready() {
-      return !!(this.servers && this.applications)
-    },
-
-    submit() {
-      this.status.setPending()
-
-      postInstance(this.data)
-        .then(response => this.$router.replace(`/instances/${response.data.uuid}`))
-        .catch(() => this.status.setError('Unable to create a new application'))
+      const response = await api.instances.postInstance(this.data)
+      await this.$router.replace(`/instances/${response.data.uuid}`)
+    } catch (error) {
+      this.status.setError('Unable to create a new application')
     }
   }
 }

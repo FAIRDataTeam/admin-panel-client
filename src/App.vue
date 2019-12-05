@@ -59,14 +59,13 @@
             class="ml-auto"
           >
             <b-nav-item class="nav-item">
-              <router-link
+              <a
                 class="nav-link"
-                to="/login"
-                @click.native="logout()"
+                @click="logout()"
               >
                 <fa :icon="['fas', 'sign-out-alt']" />
                 Logout
-              </router-link>
+              </a>
             </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
@@ -74,26 +73,24 @@
     </b-navbar>
 
     <div class="container">
-      <router-view @authenticated="setAuthenticated" />
+      <router-view />
     </div>
   </div>
 </template>
 
 <script>
-import { getUserToken, setUserToken, clearUserToken } from './localStorage'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
 
-  data() {
-    return {
-      authenticated: false
-    }
+  computed: {
+    ...mapGetters('auth', {
+      authenticated: 'authenticated'
+    })
   },
 
   mounted() {
-    this.authenticated = getUserToken() !== null
-
     if (!this.authenticated && this.$router.currentRoute.name !== 'login') {
       this.$router.replace('login')
     }
@@ -104,15 +101,9 @@ export default {
   },
 
   methods: {
-    setAuthenticated(data) {
-      setUserToken(data.token)
-      this.authenticated = true
-      this.$router.replace('/instances')
-    },
-
     logout() {
-      clearUserToken()
-      this.authenticated = false
+      this.$store.dispatch('auth/logout')
+      this.$router.push('/login')
     }
   }
 }

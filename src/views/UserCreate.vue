@@ -103,7 +103,7 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/src/validators'
-import { postUser } from '../api'
+import api from '../api'
 import DetailHeader from '../components/detail/DetailHeader'
 import Status from '../utils/Status'
 
@@ -114,7 +114,7 @@ export default {
     DetailHeader
   },
 
-  mixins: [ validationMixin ],
+  mixins: [validationMixin],
 
   validations() {
     return {
@@ -144,14 +144,17 @@ export default {
   },
 
   methods: {
-    submit() {
+    async submit() {
       this.$v.$touch()
 
       if (!this.$v.$invalid) {
-        this.status.setPending()
-        postUser(this.user)
-          .then(response => this.$router.replace(`/users/${response.data.uuid}`))
-          .catch(() => this.status.setError('Unable to create a new user.'))
+        try {
+          this.status.setPending()
+          const response = await api.users.postUser(this.user)
+          await this.$router.replace(`/users/${response.data.uuid}`)
+        } catch (error) {
+          this.status.setError('Unable to create a new user.')
+        }
       }
     }
   }

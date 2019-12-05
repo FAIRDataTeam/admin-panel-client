@@ -14,11 +14,8 @@
       />
       Loading...
     </template>
-    <template v-if="status.isError()">
-      {{ status.errorMsg }}
-    </template>
-    <template v-if="status.isSuccess()">
-      {{ status.successMsg }}
+    <template v-if="status.message">
+      {{ status.message }}
     </template>
   </div>
 </template>

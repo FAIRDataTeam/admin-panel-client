@@ -154,7 +154,7 @@
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
-import { getServer, putServer, deleteServer } from '../api'
+import api from '../api'
 import DetailHeader from '../components/detail/DetailHeader'
 import editableData from '../mixins/detail/editableData'
 import fetchData from '../mixins/detail/fetchData'
@@ -183,9 +183,9 @@ export default {
     }
   },
   methods: {
-    getData: getServer,
-    putData: putServer,
-    deleteData: deleteServer,
+    getData: api.servers.getServer,
+    putData: api.servers.putServer,
+    deleteData: api.servers.deleteServer,
     redirectLocation: () => '/servers',
   }
 }

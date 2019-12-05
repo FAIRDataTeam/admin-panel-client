@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { getInstances, deleteInstance, cloneInstance } from '../api'
+import api from '../api'
 import InstanceStatus from '../components/InstanceStatus'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
@@ -102,9 +102,9 @@ export default {
     cloneData
   ],
   methods: {
-    getData: getInstances,
-    deleteData: deleteInstance,
-    cloneData: cloneInstance
+    getData: api.instances.getInstances,
+    deleteData: api.instances.deleteInstance,
+    cloneData: api.instances.cloneInstance
   }
 }
 </script>

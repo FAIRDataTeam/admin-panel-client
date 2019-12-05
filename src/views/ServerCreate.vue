@@ -114,7 +114,7 @@
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
-import { postServer } from '../api'
+import api from '../api'
 import DetailHeader from '../components/detail/DetailHeader'
 import Status from '../utils/Status'
 
@@ -125,7 +125,7 @@ export default {
     DetailHeader
   },
 
-  mixins: [ validationMixin ],
+  mixins: [validationMixin],
 
   validations() {
     return {
@@ -153,14 +153,17 @@ export default {
   },
 
   methods: {
-    submit() {
+    async submit() {
       this.$v.$touch()
 
       if (!this.$v.$invalid) {
-        this.status.setPending()
-        postServer(this.server)
-          .then(response => this.$router.replace(`/servers/${response.data.uuid}`))
-          .catch(() => this.status.setError('Unable to create a new server.'))
+        try {
+          this.status.setPending()
+          await api.servers.postServer(this.server)
+          await this.$router.replace(`/servers/${response.data.uuid}`)
+        } catch (error) {
+          this.status.setError('Unable to create a new server.')
+        }
       }
     }
   }

@@ -164,7 +164,7 @@
 import _ from 'lodash'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
-import { postApplication } from '../api'
+import api from '../api'
 import DetailHeader from '../components/detail/DetailHeader'
 import PrismEditor from 'vue-prism-editor'
 import Status from '../utils/Status'
@@ -177,7 +177,7 @@ export default {
     PrismEditor
   },
 
-  mixins: [ validationMixin ],
+  mixins: [validationMixin],
 
   validations() {
     return {
@@ -237,15 +237,17 @@ export default {
       return null
     },
 
-    submit() {
+    async submit() {
       this.$v.$touch()
 
       if (!this.$v.$invalid) {
-        this.status.setPending()
-
-        postApplication(this.application)
-          .then(response => this.$router.replace(`/applications/${response.data.uuid}`))
-          .catch(() => this.status.setError('Unable to create a new application.'))
+        try {
+          this.status.setPending()
+          const response = await api.applications.postApplication(this.application)
+          await this.$router.replace(`/applications/${response.data.uuid}`)
+        } catch (error) {
+          this.status.setError('Unable to create a new application.')
+        }
       }
     }
   }

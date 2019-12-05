@@ -7,10 +7,13 @@ export default {
       // implemented in component that uses this mixin
     },
 
-    makeCopy(data) {
-      this.cloneData(data)
-        .then(() => this.fetchData())
-        .catch(() => this.status.setError(`Unable to make a copy of ${data.name}.`))
+    async makeCopy(data) {
+      try {
+        await this.cloneData(data)
+        await this.fetchData()
+      } catch (error) {
+        this.status.setError(`Unable to make a copy of ${data.name}.`)
+      }
     }
   }
 }

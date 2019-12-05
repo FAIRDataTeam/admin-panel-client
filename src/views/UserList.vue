@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { deleteUser, getUsers } from '../api'
+import api from '../api'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import fetchData from '../mixins/list/fetchData'
@@ -83,8 +83,8 @@ export default {
     removeData
   ],
   methods: {
-    getData: getUsers,
-    deleteData: deleteUser
+    getData: api.users.getUsers,
+    deleteData: api.users.deleteUser
   }
 }
 </script>
