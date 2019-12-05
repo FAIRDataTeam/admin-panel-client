@@ -4,6 +4,7 @@
       v-if="data"
       :title="dataName"
     >
+      <instance-status :status="data.status" />
       <button
         v-if="editing"
         class="btn btn-outline-primary"
@@ -11,7 +12,9 @@
         @click="$refs.form.submit()"
       >
         <fa :icon="['far', 'save']" />
-        Save
+        <span class="desktop-only">
+          Save
+        </span>
       </button>
       <button
         v-if="editing"
@@ -20,7 +23,9 @@
         @click="cancelEdit"
       >
         <fa :icon="['fas', 'ban']" />
-        Cancel
+        <span class="desktop-only">
+          Cancel
+        </span>
       </button>
 
       <button
@@ -38,7 +43,9 @@
           v-else
           :icon="['fas', 'play']"
         />
-        Deploy
+        <span class="desktop-only">
+          Deploy
+        </span>
       </button>
 
       <b-dropdown
@@ -51,7 +58,9 @@
       >
         <template v-slot:button-content>
           <fa :icon="['fas', 'pen']" />
-          Edit
+          <span class="desktop-only">
+            Edit
+          </span>
         </template>
         <b-dropdown-item
           :disabled="anyPending()"
@@ -115,6 +124,7 @@ import {
   getApplications, disposeInstance
 } from '../api'
 import InstanceForm from '../components/InstanceForm'
+import InstanceStatus from '../components/InstanceStatus'
 import cloneData from '../mixins/detail/cloneData'
 import editableData from '../mixins/detail/editableData'
 import fetchData from '../mixins/detail/fetchData'
@@ -125,6 +135,7 @@ export default {
   name: 'InstanceDetail',
 
   components: {
+    InstanceStatus,
     InstanceForm,
     DetailHeader,
   },

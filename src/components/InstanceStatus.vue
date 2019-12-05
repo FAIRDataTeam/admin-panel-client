@@ -1,38 +1,33 @@
 <template>
-  <span>
-    <span
-      v-if="status === 'RUNNING'"
-      class="badge badge-pill badge-success"
-    >
-      <template v-if="mobile">
-        <fa :icon="['fas', 'check']" />
-      </template>
-      <template v-else>
-        RUNNING
-      </template>
-    </span>
-    <span
-      v-if="status === 'ERROR'"
-      class="badge badge-pill badge-danger"
-    >
-      <template v-if="mobile">
-        <fa :icon="['fas', 'exclamation-triangle']" />
-      </template>
-      <template v-else>
-        ERROR
-      </template>
-    </span>
-    <span
-      v-if="status === 'NOT_DEPLOYED'"
-      class="badge badge-pill badge-secondary"
-    >
-      <template v-if="mobile">
-        <fa :icon="['fas', 'ban']" />
-      </template>
-      <template v-else>
-        NOT DEPLOYED
-      </template>
-    </span>
+  <span
+    class="badge badge-pill"
+    :class="{
+      'badge-success': status === 'RUNNING',
+      'badge-danger': status === 'ERROR',
+      'badge-secondary': status === 'NOT_DEPLOYED'
+    }"
+  >
+    <template v-if="status === 'RUNNING'">
+      <fa
+        :icon="['fas', 'check']"
+        class="mobile-only"
+      />
+      <span class="desktop-only">RUNNING</span>
+    </template>
+    <template v-if="status === 'ERROR'">
+      <fa
+        :icon="['fas', 'exclamation-triangle']"
+        class="mobile-only"
+      />
+      <span class="desktop-only">ERROR</span>
+    </template>
+    <template v-if="status === 'NOT_DEPLOYED'">
+      <fa
+        :icon="['fas', 'ban']"
+        class="mobile-only"
+      />
+      <span class="desktop-only">NOT DEPLOYED</span>
+    </template>
   </span>
 </template>
 <script>
@@ -42,12 +37,7 @@ export default {
     status: {
       type: String,
       required: true
-    },
-    mobile: {
-      type: Boolean,
-      default: false
     }
   }
 }
-
 </script>

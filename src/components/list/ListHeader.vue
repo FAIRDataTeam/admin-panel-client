@@ -7,7 +7,7 @@
         class="btn btn-outline-primary"
       >
         <fa :icon="['fas', 'plus']" />
-        Create
+        <span class="desktop-only">Create</span>
       </router-link>
     </div>
   </div>

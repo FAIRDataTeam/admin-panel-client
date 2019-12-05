@@ -11,7 +11,9 @@
         @click="submit"
       >
         <fa :icon="['far', 'save']" />
-        Save
+        <span class="desktop-only">
+          Save
+        </span>
       </button>
       <button
         v-if="editing"
@@ -20,7 +22,9 @@
         @click="cancelEdit"
       >
         <fa :icon="['fas', 'ban']" />
-        Cancel
+        <span class="desktop-only">
+          Cancel
+        </span>
       </button>
 
       <button
@@ -30,7 +34,9 @@
         @click="submitPassword"
       >
         <fa :icon="['far', 'save']" />
-        Save
+        <span class="desktop-only">
+          Save
+        </span>
       </button>
       <button
         v-if="editingPassword"
@@ -39,7 +45,9 @@
         @click="cancelPassword"
       >
         <fa :icon="['fas', 'ban']" />
-        Cancel
+        <span class="desktop-only">
+          Cancel
+        </span>
       </button>
       <b-dropdown
         v-if="!editing && !editingPassword"
@@ -51,7 +59,9 @@
       >
         <template v-slot:button-content>
           <fa :icon="['fas', 'pen']" />
-          Edit
+          <span class="desktop-only">
+            Edit
+          </span>
         </template>
         <b-dropdown-item
           :disabled="status.isPending()"

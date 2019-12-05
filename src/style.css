@@ -11,6 +11,17 @@
   margin-bottom: 10rem;
 }
 
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+}
 
 /* Navigation */
 
@@ -27,8 +38,10 @@
   margin-right: .5rem;
 }
 
-.btn .svg-inline--fa {
-  margin-right: .25rem;
+@media (min-width: 768px) {
+  .btn .svg-inline--fa {
+    margin-right: .25rem;
+  }
 }
 
 .dropdown-item-danger a {
@@ -40,25 +53,11 @@
   background: #dc3545 !important;
 }
 
-
 /* Tables */
 
 .table td {
   vertical-align: middle;
 }
-
-@media (max-width: 767px) {
-  .table .desktop-only {
-    display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  .table .mobile-only {
-    display: none;
-  }
-}
-
 
 /* Forms */
 

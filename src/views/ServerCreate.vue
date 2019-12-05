@@ -7,7 +7,9 @@
         @click="submit"
       >
         <fa :icon="['far', 'save']" />
-        Save
+        <span class="desktop-only">
+          Save
+        </span>
       </button>
     </detail-header>
 

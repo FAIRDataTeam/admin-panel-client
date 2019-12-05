@@ -36,14 +36,8 @@
             target="_blank"
           >{{ instance.url }}</a>
         </td>
-        <td class="desktop-only">
+        <td>
           <instance-status :status="instance.status" />
-        </td>
-        <td class="mobile-only">
-          <instance-status
-            :status="instance.status"
-            mobile
-          />
         </td>
         <td class="text-right">
           <b-dropdown
