@@ -1,4 +1,5 @@
 import request from './request'
+import router from '../router'
 
 
 const createRequestInterceptor = (store) => {
@@ -16,10 +17,11 @@ const createRequestInterceptor = (store) => {
 
 
 const createResponseInterceptor = (store) => {
-  request.interceptors.response.use(null, async (error) => {
+  request.interceptors.response.use(null, (error) => {
     const { status } = error.response
     if (status === 401) {
       store.dispatch('auth/logout')
+      router.push('/login')
     }
   })
 }
