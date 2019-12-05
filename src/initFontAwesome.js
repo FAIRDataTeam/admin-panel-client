@@ -6,6 +6,7 @@ library.add([
   far.faCopy,
   far.faFile,
   far.faFileAlt,
+  far.faPauseCircle,
   far.faSave,
   far.faTrashAlt,
   fas.faBan,

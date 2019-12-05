@@ -4,7 +4,7 @@
     :class="{
       'badge-success': status === 'RUNNING',
       'badge-danger': status === 'ERROR',
-      'badge-secondary': status === 'NOT_DEPLOYED'
+      'badge-secondary': status === 'NOT_RUNNING'
     }"
   >
     <template v-if="status === 'RUNNING'">
@@ -21,12 +21,12 @@
       />
       <span class="desktop-only">ERROR</span>
     </template>
-    <template v-if="status === 'NOT_DEPLOYED'">
+    <template v-if="status === 'NOT_RUNNING'">
       <fa
         :icon="['fas', 'ban']"
         class="mobile-only"
       />
-      <span class="desktop-only">NOT DEPLOYED</span>
+      <span class="desktop-only">NOT RUNNING</span>
     </template>
   </span>
 </template>

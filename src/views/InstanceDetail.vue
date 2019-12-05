@@ -72,6 +72,14 @@
         <b-dropdown-divider />
         <b-dropdown-item
           :disabled="anyPending"
+          @click="pause"
+        >
+          <fa :icon="['far', 'pause-circle']" />
+          Pause
+        </b-dropdown-item>
+        <b-dropdown-divider />
+        <b-dropdown-item
+          :disabled="anyPending"
           class="dropdown-item-danger"
           @click="dispose"
         >
@@ -121,6 +129,7 @@ import cloneData from '../mixins/detail/cloneData'
 import editableData from '../mixins/detail/editableData'
 import fetchData from '../mixins/detail/fetchData'
 import removeData from '../mixins/detail/removeData'
+import pipelines from '../utils/pipelines'
 import Status from '../utils/Status'
 
 export default {
@@ -196,23 +205,48 @@ export default {
       try {
         this.deployStatus.setPending()
         this.status.setPending()
-        await api.instances.deployInstance(this.data)
-        this.status.setDone('Instance was successfully deployed.')
+        const response = await api.pipelines.deployInstance(this.data)
+        pipelines.awaitPipeline(response.data.uuid, () => {
+          this.status.setDone('Instance was successfully deployed.')
+          this.deployStatus.setDone()
+        }, () => {
+          this.status.setError('Deploy failed.')
+          this.deployStatus.setDone()
+        })
       } catch (error) {
         this.status.setError('Deploy failed.')
-
+        this.deployStatus.setDone()
       }
-      this.deployStatus.setDone()
     },
 
     async dispose() {
       if (window.confirm(`Are you sure you want to dispose ${this.data.name}? (This will stop the running instance and remove it from the server)`)) {
         try {
           this.status.setPending()
-          await api.instances.disposeInstance(this.data)
-          this.status.setDone('Instance was successfully disposed.')
+          const response = await api.pipelines.disposeInstance(this.data)
+          pipelines.awaitPipeline(response.data.uuid, () => {
+            this.status.setDone('Instance was successfully disposed.')
+          }, () => {
+            this.status.setError('Dispose failed.')
+          })
         } catch (error) {
           this.status.setError('Dispose failed.')
+        }
+      }
+    },
+
+    async pause() {
+      if (window.confirm(`Are you sure you want to pause ${this.data.name}?`)) {
+        try {
+          this.status.setPending()
+          const response = await api.pipelines.pauseInstance(this.data)
+          pipelines.awaitPipeline(response.data.uuid, () => {
+            this.status.setDone('Instance was successfully paused.')
+          }, () => {
+            this.status.setError('Pause failed.')
+          })
+        } catch (error) {
+          this.status.setError('Pause failed.')
         }
       }
     }

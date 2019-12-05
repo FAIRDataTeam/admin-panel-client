@@ -100,6 +100,21 @@
             Field is required
           </p>
         </div>
+
+        <div class="form-group">
+          <label>Pause</label>
+          <input
+            v-model.trim="$v.application.pauseCommand.$model"
+            class="form-control"
+            :class="{'is-invalid': $v.application.pauseCommand.$error}"
+          >
+          <p
+            v-if="!$v.application.pauseCommand.required"
+            class="invalid-feedback"
+          >
+            Field is required
+          </p>
+        </div>
       </fieldset>
 
       <fieldset>
@@ -186,6 +201,7 @@ export default {
         formSpec: { required },
         deployCommand: { required },
         disposeCommand: { required },
+        pauseCommand: { required },
         templates: {
           $each: {
             name: {
@@ -208,6 +224,7 @@ export default {
         formSpec: '',
         deployCommand: '',
         disposeCommand: '',
+        pauseCommand: '',
         templates: []
       },
       status: new Status()

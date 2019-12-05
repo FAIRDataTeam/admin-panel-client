@@ -147,6 +147,21 @@
             Field is required
           </p>
         </div>
+
+        <div class="form-group">
+          <label>Pause</label>
+          <input
+            v-model.trim="$v.data.pauseCommand.$model"
+            :class="{'is-invalid': $v.data.pauseCommand.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            :readonly="!editing"
+          >
+          <p
+            v-if="!$v.data.pauseCommand.required"
+            class="invalid-feedback"
+          >
+            Field is required
+          </p>
+        </div>
       </fieldset>
 
       <fieldset>
@@ -249,6 +264,7 @@ export default {
         name: { required },
         deployCommand: { required },
         disposeCommand: { required },
+        pauseCommand: { required },
         formSpec: {
           required,
           isJson(value) {
