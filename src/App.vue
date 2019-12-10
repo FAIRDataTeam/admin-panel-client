@@ -20,52 +20,35 @@
           is-nav
         >
           <b-navbar-nav v-if="authenticated">
-            <b-nav-item>
-              <router-link
-                class="nav-link"
-                to="/instances"
-              >
-                Instances
-              </router-link>
+            <b-nav-item to="/instances">
+              Instances
             </b-nav-item>
-            <b-nav-item>
-              <router-link
-                class="nav-link"
-                to="/servers"
-              >
+            <b-nav-item to="/pipelines">
+              Pipelines
+            </b-nav-item>
+            <b-nav-item-dropdown text="More">
+              <b-dropdown-item to="/servers">
                 Servers
-              </router-link>
-            </b-nav-item>
-            <b-nav-item>
-              <router-link
-                class="nav-link"
-                to="/applications"
-              >
+              </b-dropdown-item>
+              <b-dropdown-item to="/applications">
                 Applications
-              </router-link>
-            </b-nav-item>
-            <b-nav-item>
-              <router-link
-                class="nav-link"
-                to="/users"
-              >
+              </b-dropdown-item>
+              <b-dropdown-item to="/users">
                 Users
-              </router-link>
-            </b-nav-item>
+              </b-dropdown-item>
+            </b-nav-item-dropdown>
           </b-navbar-nav>
 
           <b-navbar-nav
             v-if="authenticated"
             class="ml-auto"
           >
-            <b-nav-item class="nav-item">
-              <a
-                class="nav-link"
-                @click="logout()"
-              >
-                <fa :icon="['fas', 'sign-out-alt']" />
-                Logout
-              </a>
+            <b-nav-item
+              class="nav-item"
+              @click="logout()"
+            >
+              <fa :icon="['fas', 'sign-out-alt']" />
+              Logout
             </b-nav-item>
           </b-navbar-nav>
         </b-collapse>

@@ -3,6 +3,7 @@
     <h1>{{ title }}</h1>
     <div class="mb-2 text-right">
       <router-link
+        v-if="createLink"
         :to="createLink"
         class="btn btn-outline-primary"
       >
@@ -23,7 +24,7 @@ export default {
     },
     createLink: {
       type: String,
-      required: true
+      default: null
     }
   }
 }

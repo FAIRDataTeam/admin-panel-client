@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import ApplicationCreate from '../views/ApplicationCreate'
 import ApplicationDetail from '../views/ApplicationDetail'
 import ApplicationList from '../views/ApplicationList'
@@ -8,6 +8,8 @@ import InstanceDetail from '../views/InstanceDetail.vue'
 import InstanceCreate from '../views/InstanceCreate.vue'
 import Login from '../views/Login.vue'
 import NotFound from '../views/NotFound.vue'
+import PipelineDetail from '../views/PipelineDetail'
+import PipelineList from '../views/PipelineList'
 import ServerDetail from '../views/ServerDetail.vue'
 import ServerCreate from '../views/ServerCreate.vue'
 import ServerList from '../views/ServerList.vue'
@@ -15,8 +17,7 @@ import UserCreate from '../views/UserCreate'
 import UserDetail from '../views/UserDetail'
 import UserList from '../views/UserList'
 
-
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const routes = [
   { path: '/', redirect: '/instances' },
@@ -27,6 +28,8 @@ const routes = [
   { path: '/instances/create', component: InstanceCreate },
   { path: '/instances/:id', component: InstanceDetail },
   { path: '/login', component: Login, name: 'login' },
+  { path: '/pipelines', component: PipelineList },
+  { path: '/pipelines/:id', component: PipelineDetail },
   { path: '/servers', component: ServerList },
   { path: '/servers/create', component: ServerCreate },
   { path: '/servers/:id', component: ServerDetail },
@@ -41,6 +44,6 @@ const router = new VueRouter({
   linkExactActiveClass: 'active',
   base: process.env.BASE_URL,
   routes,
-});
+})
 
-export default router;
+export default router

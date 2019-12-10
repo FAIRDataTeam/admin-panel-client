@@ -13,6 +13,7 @@ library.add([
   fas.faCheck,
   fas.faEllipsisV,
   fas.faExclamationTriangle,
+  fas.faHourglassHalf,
   fas.faKey,
   fas.faPen,
   fas.faPlay,
