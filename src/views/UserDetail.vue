@@ -225,7 +225,7 @@ export default {
     getData: api.users.getUser,
     putData: api.users.putUser,
     deleteData: api.users.deleteUser,
-    redirectLocation: () => '/users',
+    removeRedirectLocation: () => '/users',
     changePassword() {
       this.editingPassword = true
     },

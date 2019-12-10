@@ -186,7 +186,7 @@ export default {
     getData: api.servers.getServer,
     putData: api.servers.putServer,
     deleteData: api.servers.deleteServer,
-    redirectLocation: () => '/servers',
+    removeRedirectLocation: () => '/servers',
   }
 }
 </script>

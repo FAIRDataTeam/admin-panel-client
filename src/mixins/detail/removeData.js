@@ -15,7 +15,7 @@ export default {
         try {
           this.status.setPending()
           await this.deleteData(this.data)
-          await this.$routes.replace(this.redirectLocation())
+          await this.$router.replace(this.removeRedirectLocation())
         } catch (error) {
           this.status.setError(`Unable to delete ${this.data.name}`)
         }
