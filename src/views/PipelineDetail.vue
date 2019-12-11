@@ -5,13 +5,41 @@
       :title="pipelineTitle(data)"
     >
       <PipelineStatus :status="data.status" />
+      <b-dropdown
+        right
+        variant="outline-secondary"
+      >
+        <b-dropdown-item
+          class="dropdown-item-danger"
+          @click="remove"
+        >
+          <fa :icon="['far', 'trash-alt']" />
+          Remove
+        </b-dropdown-item>
+      </b-dropdown>
     </detail-header>
-    <prism-editor
-      v-if="data"
-      v-model="data.log"
-      language="none"
-      :readonly="true"
+
+    <status-flash
+      :status="status"
+      no-loading
     />
+
+    <div v-if="data">
+      <dl>
+        <dt>Created</dt>
+        <dd>{{ data.created | formatDateTime }}</dd>
+        <dt>Duration</dt>
+        <dd>{{ data.duration | formatDuration }}</dd>
+        <dt>Log</dt>
+        <dd>
+          <prism-editor
+            v-model="data.log"
+            language="none"
+            :readonly="true"
+          />
+        </dd>
+      </dl>
+    </div>
   </div>
 </template>
 <script>
@@ -20,6 +48,7 @@ import DetailHeader from '../components/detail/DetailHeader'
 import PipelineStatus from '../components/PipelineStatus'
 import PrismEditor from 'vue-prism-editor'
 import fetchData from '../mixins/detail/fetchData'
+import removeData from '../mixins/detail/removeData'
 import pipelines from '../utils/pipelines'
 
 export default {
@@ -30,11 +59,20 @@ export default {
     PrismEditor,
   },
   mixins: [
-    fetchData
+    fetchData,
+    removeData,
   ],
   methods: {
+    getName: pipelines.pipelineTitle,
     getData: api.pipelines.getPipeline,
+    deleteData: api.pipelines.deletePipeline,
+    removeRedirectLocation: () => '/pipelines',
     pipelineTitle: pipelines.pipelineTitle
   }
 }
 </script>
+<style scoped>
+dd {
+  margin-bottom: 2rem;
+}
+</style>

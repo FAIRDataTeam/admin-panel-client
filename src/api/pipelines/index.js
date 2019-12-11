@@ -32,5 +32,9 @@ export default {
 
   deletePipeline(pipeline) {
     return request.delete(`/pipelines/${pipeline.uuid}`)
+  },
+
+  deleteAllPipelines() {
+    return request.delete(`/pipelines`)
   }
 }

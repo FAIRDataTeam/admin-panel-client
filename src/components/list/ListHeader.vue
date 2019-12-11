@@ -10,6 +10,7 @@
         <fa :icon="['fas', 'plus']" />
         <span class="desktop-only">Create</span>
       </router-link>
+      <slot name="actions" />
     </div>
   </div>
 </template>

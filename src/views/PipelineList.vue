@@ -1,8 +1,21 @@
 <template>
   <div>
-    <list-header
-      title="Pipelines"
-    />
+    <list-header title="Pipelines">
+      <template v-slot:actions>
+        <b-dropdown
+          right
+          variant="outline-secondary"
+        >
+          <b-dropdown-item
+            class="dropdown-item-danger"
+            @click="removeAll"
+          >
+            <fa :icon="['fas', 'dumpster-fire']" />
+            Remove all
+          </b-dropdown-item>
+        </b-dropdown>
+      </template>
+    </list-header>
 
     <status-flash
       :status="status"
@@ -13,6 +26,12 @@
       <template v-slot:header>
         <th>Pipeline</th>
         <th class="desktop-only">
+          Created
+        </th>
+        <th class="desktop-only text-center">
+          Duration
+        </th>
+        <th class="desktop-only text-center">
           Status
         </th>
         <th class="mobile-only" />
@@ -26,7 +45,13 @@
             {{ pipelineTitle(pipeline) }}
           </router-link>
         </td>
-        <td>
+        <td class="desktop-only text-black-50">
+          {{ pipeline.created | formatDateTime }}
+        </td>
+        <td class="desktop-only text-center text-black-50">
+          {{ pipeline.duration | formatDuration }}
+        </td>
+        <td class="text-center">
           <PipelineStatus :status="pipeline.status" />
         </td>
         <td class="text-right">
@@ -62,6 +87,8 @@
   </div>
 </template>
 <script>
+import _ from 'lodash'
+import moment from 'moment'
 import api from '../api'
 import InlineLoader from '../components/list/InlineLoader'
 import ListHeader from '../components/list/ListHeader'
@@ -80,9 +107,23 @@ export default {
   ],
   methods: {
     getData: api.pipelines.getPipelines,
-    deleteData: api.pipelines.deletePipeline,
     getName: pipelines.pipelineTitle,
-    pipelineTitle: pipelines.pipelineTitle
+    deleteData: api.pipelines.deletePipeline,
+    pipelineTitle: pipelines.pipelineTitle,
+    sortData(data) {
+      return _.sortBy(data, [(row) => -moment(row.created).unix()])
+    },
+    async removeAll() {
+      if (window.confirm('Are you sure you want to remove all pipelines?')) {
+        try {
+          await api.pipelines.deleteAllPipelines()
+          await this.fetchData()
+          this.status.setDone('All pipelines has been successfully removed.')
+        } catch (error) {
+          this.status.setError('Unable to remove all pipelines.')
+        }
+      }
+    }
   }
 }
 </script>

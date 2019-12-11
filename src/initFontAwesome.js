@@ -11,6 +11,7 @@ library.add([
   far.faTrashAlt,
   fas.faBan,
   fas.faCheck,
+  fas.faDumpsterFire,
   fas.faEllipsisV,
   fas.faExclamationTriangle,
   fas.faHourglassHalf,

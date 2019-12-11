@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import Status from '../../utils/Status'
+
 
 export default {
   name: 'fetchData',
@@ -24,6 +26,10 @@ export default {
       // implemented in component that uses this mixin
     },
 
+    getName(data) {
+      return data.name
+    },
+
     async fetchData() {
       try {
         this.status.setPending()
@@ -32,7 +38,8 @@ export default {
         this.dataName = this.data.name
         this.status.setDone()
       } catch (error) {
-        this.status.setError(error.toString())
+        const msg = _.get(error, 'response.data.message', error.toString())
+        this.status.setError(msg)
       }
     }
   }

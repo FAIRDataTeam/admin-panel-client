@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import moment from 'moment'
 import api from '../api'
 
 function awaitPipeline(uuid, doneCallback, errorCallback) {
@@ -18,6 +19,7 @@ function awaitPipeline(uuid, doneCallback, errorCallback) {
 function pipelineTitle(pipeline) {
   return `${_.capitalize(pipeline.type)} of ${pipeline.instance.name}`
 }
+
 
 export default {
   awaitPipeline,

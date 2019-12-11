@@ -185,7 +185,8 @@ export default {
         this.applications = applications.data
         this.status.setDone()
       } catch (error) {
-        this.status.setError(error.toString())
+        const msg = _.get(error, 'response.data.message', error.toString())
+        this.status.setError(msg)
       }
     },
 

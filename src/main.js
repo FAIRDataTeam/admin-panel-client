@@ -16,6 +16,7 @@ import StatusFlash from './components/StatusFlash'
 import router from './router'
 import store from './store'
 import './initFontAwesome'
+import './filters'
 
 Vue.config.productionTip = false
 
