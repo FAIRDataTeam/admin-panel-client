@@ -2,9 +2,13 @@ import _ from 'lodash'
 import moment from 'moment'
 import api from '../api'
 
-function awaitPipeline(uuid, doneCallback, errorCallback) {
+function awaitPipeline(uuid, doneCallback, errorCallback, tickCallback = null) {
   const interval = setInterval(async () => {
     const pipeline = await api.pipelines.getPipeline(uuid)
+    if (tickCallback) {
+      tickCallback(pipeline.data)
+    }
+
     if (pipeline.data.status === 'DONE') {
       clearInterval(interval)
       doneCallback()

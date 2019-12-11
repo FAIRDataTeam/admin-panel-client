@@ -67,7 +67,27 @@ export default {
     getData: api.pipelines.getPipeline,
     deleteData: api.pipelines.deletePipeline,
     removeRedirectLocation: () => '/pipelines',
-    pipelineTitle: pipelines.pipelineTitle
+    pipelineTitle: pipelines.pipelineTitle,
+
+    async fetchData() {
+      try {
+        this.status.setPending()
+        const response = await this.getData(this.$route.params.id)
+        this.data = response.data
+        this.dataName = this.data.name
+        this.status.setDone()
+
+        if (this.data.status === 'QUEUED' || this.data.status === 'RUNNING') {
+          pipelines.awaitPipeline(this.data.uuid, () => {}, () => {}, (data) => {
+            this.data = data
+          })
+        }
+
+      } catch (error) {
+        const msg = _.get(error, 'response.data.message', error.toString())
+        this.status.setError(msg)
+      }
+    }
   }
 }
 </script>
