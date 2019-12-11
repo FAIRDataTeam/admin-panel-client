@@ -7,10 +7,8 @@ import 'prismjs/components/prism-json'
 import 'prismjs/components/prism-scss'
 import 'prismjs/components/prism-yaml'
 import 'prismjs/themes/prism.css'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import './style.css'
+import './scss/main.scss'
 import App from './App.vue'
 import StatusFlash from './components/StatusFlash'
 import router from './router'
@@ -26,6 +24,8 @@ Vue.use(BootstrapVue)
 
 Vue.component('fa', FontAwesomeIcon)
 Vue.component('status-flash', StatusFlash)
+
+document.title = window.config.title
 
 new Vue({
   router,

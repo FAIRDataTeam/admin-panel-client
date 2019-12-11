@@ -1,3 +1,6 @@
 *
 !dist
 !nginx
+!src
+!node_modules/bootstrap
+!node_modules/bootstrap-vue

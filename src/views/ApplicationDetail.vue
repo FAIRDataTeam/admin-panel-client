@@ -107,7 +107,7 @@
             Field is required
           </p>
           <p
-            v-if="!$v.data.formSpec.isJson"
+            v-else-if="!$v.data.formSpec.isJson"
             class="invalid-feedback"
           >
             This is not a valid JSON

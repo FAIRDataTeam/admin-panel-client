@@ -11,7 +11,7 @@
           class="navbar-brand"
           to="/instances"
         >
-          FDP Admin Panel
+          {{ title }}
         </router-link>
         <b-navbar-toggle target="nav-collapse" />
 
@@ -66,6 +66,12 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
+
+  data() {
+    return {
+      title: window.config.title
+    }
+  },
 
   computed: {
     ...mapGetters('auth', {
