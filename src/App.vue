@@ -26,12 +26,12 @@
             <b-nav-item to="/pipelines">
               Pipelines
             </b-nav-item>
+            <b-nav-item to="/applications">
+              Applications
+            </b-nav-item>
             <b-nav-item-dropdown text="More">
               <b-dropdown-item to="/servers">
                 Servers
-              </b-dropdown-item>
-              <b-dropdown-item to="/applications">
-                Applications
               </b-dropdown-item>
               <b-dropdown-item to="/users">
                 Users
