@@ -16,6 +16,7 @@
           Status
         </th>
         <th class="mobile-only" />
+        <th />
       </template>
 
       <template v-slot:row="pipeline">
@@ -27,6 +28,34 @@
         <td>
           <PipelineStatus :status="pipeline.status" />
         </td>
+        <td class="text-right">
+          <b-dropdown
+            text="Actions"
+            right
+            variant="link"
+            no-caret
+          >
+            <template v-slot:button-content>
+              <fa :icon="['fas', 'ellipsis-v']" />
+            </template>
+            <b-dropdown-item :to="`/pipelines/${pipeline.uuid}`">
+              <fa :icon="['far', 'file-alt']" />
+              View detail
+            </b-dropdown-item>
+            <b-dropdown-divider />
+            <b-dropdown-item
+              class="dropdown-item-danger"
+              @click="remove(pipeline)"
+            >
+              <fa :icon="['far', 'trash-alt']" />
+              Remove
+            </b-dropdown-item>
+          </b-dropdown>
+        </td>
+      </template>
+
+      <template v-slot:empty>
+        There are no pipelines.
       </template>
     </list-table>
   </div>
@@ -37,16 +66,20 @@ import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import PipelineStatus from '../components/PipelineStatus'
 import fetchData from '../mixins/list/fetchData'
+import removeData from '../mixins/list/removeData'
 import pipelines from '../utils/pipelines'
 
 export default {
   name: 'PipelinesList',
   components: { PipelineStatus, ListTable, ListHeader },
   mixins: [
-    fetchData
+    fetchData,
+    removeData
   ],
   methods: {
     getData: api.pipelines.getPipelines,
+    deleteData: api.pipelines.deletePipeline,
+    getName: pipelines.pipelineTitle,
     pipelineTitle: pipelines.pipelineTitle
   }
 }

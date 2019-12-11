@@ -27,7 +27,7 @@ export default {
       try {
         this.status.setPending()
         const response = await this.getData()
-        this.data = response.data
+        this.data =  response.data
         this.status.setDone()
       } catch (error) {
         this.status.setError(error.toString())

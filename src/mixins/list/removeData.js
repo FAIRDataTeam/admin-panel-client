@@ -7,8 +7,12 @@ export default {
       // implemented in component that uses this mixin
     },
 
+    getName(data) {
+      return data.name
+    },
+
     async remove(data) {
-      if (window.confirm(`Are you sure you want to delete ${data.name}?`)) {
+      if (window.confirm(`Are you sure you want to delete ${this.getName(data)}?`)) {
         try {
           await this.deleteData(data)
           await this.fetchData()

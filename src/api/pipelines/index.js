@@ -28,5 +28,9 @@ export default {
 
   getPipeline(uuid) {
     return request.get(`/pipelines/${uuid}`)
+  },
+
+  deletePipeline(pipeline) {
+    return request.delete(`/pipelines/${pipeline.uuid}`)
   }
 }
