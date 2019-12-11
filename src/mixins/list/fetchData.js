@@ -7,6 +7,7 @@ export default {
     return {
       status: new Status(),
       data: null,
+      uuidsLoading: [],
     }
   },
 
@@ -21,6 +22,22 @@ export default {
   methods: {
     getData() {
       // implemented in component that uses this mixin
+    },
+
+    getName(data) {
+      return data.name
+    },
+
+    isLoading(uuid) {
+      return this.uuidsLoading.filter(u => u === uuid).length > 0
+    },
+
+    addLoading(uuid) {
+      this.uuidsLoading.push(uuid)
+    },
+
+    removeLoading(uuid) {
+      this.uuidsLoading =this.uuidsLoading.filter(u => u !== uuid)
     },
 
     async fetchData() {

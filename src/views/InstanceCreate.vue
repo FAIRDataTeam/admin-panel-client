@@ -102,7 +102,7 @@ export default {
       const response = await api.instances.postInstance(this.data)
       await this.$router.replace(`/instances/${response.data.uuid}`)
     } catch (error) {
-      this.status.setError('Unable to create a new application')
+      this.status.setError('Unable to create a new application.')
     }
   }
 }

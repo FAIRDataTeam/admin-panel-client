@@ -24,6 +24,7 @@
 
       <template v-slot:row="server">
         <td>
+          <inline-loader v-if="isLoading(server.uuid)" />
           <router-link :to="`/servers/${server.uuid}`">
             {{ server.name }}
           </router-link>
@@ -73,6 +74,7 @@
 
 <script>
 import api from '../api'
+import InlineLoader from '../components/list/InlineLoader'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import fetchData from '../mixins/list/fetchData'
@@ -81,6 +83,7 @@ import removeData from '../mixins/list/removeData'
 export default {
   name: 'ServerList',
   components: {
+    InlineLoader,
     ListHeader,
     ListTable
   },

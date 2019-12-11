@@ -25,6 +25,7 @@
 
       <template v-slot:row="instance">
         <td>
+          <inline-loader v-if="isLoading(instance.uuid)" />
           <router-link :to="`/instances/${instance.uuid}`">
             {{ instance.name }}
           </router-link>
@@ -58,6 +59,11 @@
               Make a copy
             </b-dropdown-item>
             <b-dropdown-divider />
+            <b-dropdown-item @click="deploy(instance)">
+              <fa :icon="['fas', 'play']" />
+              Deploy
+            </b-dropdown-item>
+            <b-dropdown-divider />
             <b-dropdown-item
               class="dropdown-item-danger"
               @click="remove(instance)"
@@ -83,15 +89,18 @@
 <script>
 import api from '../api'
 import InstanceStatus from '../components/InstanceStatus'
+import InlineLoader from '../components/list/InlineLoader'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import cloneData from '../mixins/list/cloneData'
 import fetchData from '../mixins/list/fetchData'
 import removeData from '../mixins/list/removeData'
+import pipelines from '../utils/pipelines'
 
 export default {
   name: 'InstanceList',
   components: {
+    InlineLoader,
     ListHeader,
     ListTable,
     InstanceStatus
@@ -104,7 +113,24 @@ export default {
   methods: {
     getData: api.instances.getInstances,
     deleteData: api.instances.deleteInstance,
-    cloneData: api.instances.cloneInstance
+    cloneData: api.instances.cloneInstance,
+    async deploy(instance) {
+      try {
+        this.status.setPending()
+        this.addLoading(instance.uuid)
+        const response = await api.pipelines.deployInstance(instance)
+        pipelines.awaitPipeline(response.data.uuid, () => {
+          this.status.setDone('Instance was successfully deployed.')
+          this.removeLoading(instance.uuid)
+        }, () => {
+          this.status.setError('Deploy failed.')
+          this.removeLoading(instance.uuid)
+        })
+      } catch (error) {
+        this.status.setError('Deploy failed.')
+        this.removeLoading(instance.uuid)
+      }
+    }
   }
 }
 </script>

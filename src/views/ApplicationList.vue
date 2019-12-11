@@ -18,6 +18,7 @@
 
       <template v-slot:row="application">
         <td>
+          <inline-loader v-if="isLoading(application.uuid)" />
           <router-link :to="`/applications/${application.uuid}`">
             {{ application.name }}
           </router-link>
@@ -64,6 +65,7 @@
 </template>
 <script>
 import api from '../api'
+import InlineLoader from '../components/list/InlineLoader'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import cloneData from '../mixins/list/cloneData'
@@ -73,6 +75,7 @@ import removeData from '../mixins/list/removeData'
 export default {
   name: 'ApplicationList',
   components: {
+    InlineLoader,
     ListHeader,
     ListTable
   },

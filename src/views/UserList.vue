@@ -21,6 +21,7 @@
 
       <template v-slot:row="user">
         <td>
+          <inline-loader v-if="isLoading(user.uuid)" />
           <router-link :to="`/users/${user.uuid}`">
             {{ user.name }}
           </router-link>
@@ -67,6 +68,7 @@
 
 <script>
 import api from '../api'
+import InlineLoader from '../components/list/InlineLoader'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import fetchData from '../mixins/list/fetchData'
@@ -75,6 +77,7 @@ import removeData from '../mixins/list/removeData'
 export default {
   name: 'UserList',
   components: {
+    InlineLoader,
     ListHeader,
     ListTable
   },

@@ -9,10 +9,14 @@ export default {
 
     async makeCopy(data) {
       try {
+        this.addLoading(data.uuid)
         await this.cloneData(data)
         await this.fetchData()
+        this.status.setDone(`Copy of ${this.getName(data)} was successfully created.`)
       } catch (error) {
-        this.status.setError(`Unable to make a copy of ${data.name}.`)
+        this.status.setError(`Unable to make a copy of ${this.getName(data)}.`)
+      } finally {
+        this.removeLoading(data.uuid)
       }
     }
   }

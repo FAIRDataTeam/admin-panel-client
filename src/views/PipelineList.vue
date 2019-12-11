@@ -21,6 +21,7 @@
 
       <template v-slot:row="pipeline">
         <td>
+          <inline-loader v-if="isLoading(pipeline.uuid)" />
           <router-link :to="`/pipelines/${pipeline.uuid}`">
             {{ pipelineTitle(pipeline) }}
           </router-link>
@@ -62,6 +63,7 @@
 </template>
 <script>
 import api from '../api'
+import InlineLoader from '../components/list/InlineLoader'
 import ListHeader from '../components/list/ListHeader'
 import ListTable from '../components/list/ListTable'
 import PipelineStatus from '../components/PipelineStatus'
@@ -71,7 +73,7 @@ import pipelines from '../utils/pipelines'
 
 export default {
   name: 'PipelinesList',
-  components: { PipelineStatus, ListTable, ListHeader },
+  components: { InlineLoader, PipelineStatus, ListTable, ListHeader },
   mixins: [
     fetchData,
     removeData
