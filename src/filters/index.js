@@ -7,6 +7,9 @@ Vue.filter('formatDateTime', function(timestamp) {
 
 
 Vue.filter('formatDuration', function (duration) {
+  if (duration === null) {
+    return '-'
+  }
   const seconds = duration % 60
   const minutes = Math.floor(duration / 60)
   return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`
