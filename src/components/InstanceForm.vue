@@ -46,6 +46,7 @@
       <div class="form-group">
         <label>Application Template</label>
         <select
+          v-if="editing"
           v-model="$v.data.applicationUuid.$model"
           :class="{'is-invalid': $v.data.applicationUuid.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
           :disabled="!editing"
@@ -59,6 +60,13 @@
             {{ application.name }}
           </option>
         </select>
+        <router-link
+          v-if="!editing"
+          class="form-control-link"
+          :to="`/applications/${data.applicationUuid}`"
+        >
+          {{ selectedApplication.name }}
+        </router-link>
         <p
           v-if="!$v.data.url.required"
           class="invalid-feedback"
@@ -70,6 +78,7 @@
       <div class="form-group">
         <label>Server</label>
         <select
+          v-if="editing"
           v-model="$v.data.serverUuid.$model"
           :class="{'is-invalid': $v.data.serverUuid.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
           :disabled="!editing"
@@ -88,6 +97,13 @@
         >
           Field is required
         </p>
+        <router-link
+          v-if="!editing"
+          class="form-control-link"
+          :to="`/servers/${data.serverUuid}`"
+        >
+          {{ selectedServer.name }}
+        </router-link>
       </div>
 
       <div class="form-group">
@@ -198,10 +214,12 @@ export default {
   },
 
   computed: {
+    selectedApplication() {
+      return this.applications.filter(a => a.uuid === this.data.applicationUuid)[0]
+    },
     selectedSpecSections() {
       try {
-        const selectedApplication = this.applications.filter(a => a.uuid === this.data.applicationUuid)
-        const spec = JSON.parse(selectedApplication[0].formSpec)
+        const spec = JSON.parse(this.selectedApplication.formSpec)
         return spec.sections || []
       } catch (e) {
         return []
@@ -209,7 +227,10 @@ export default {
     },
     selectedSpecFields() {
       return this.selectedSpecSections.flatMap(section => section.fields)
-    }
+    },
+    selectedServer() {
+      return this.servers.filter(s => s.uuid === this.data.serverUuid)[0]
+    },
   },
 
   created() {
