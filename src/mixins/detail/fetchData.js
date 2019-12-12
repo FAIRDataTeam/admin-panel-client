@@ -38,7 +38,7 @@ export default {
         this.dataName = this.data.name
         this.status.setDone()
       } catch (error) {
-        const msg = _.get(error, 'response.data.message', error.toString())
+        const msg = _.get(error, 'response.data.message', 'Unable to load data.')
         this.status.setError(msg)
       }
     }

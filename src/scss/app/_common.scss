@@ -1,0 +1,185 @@
+@import "../variables";
+
+// Layout 
+
+.container {
+  @media (max-width: 767px) {
+    max-width: 100%;
+  }
+}
+
+#app {
+  padding-top: 80px;
+}
+
+.detail-page {
+  margin-top: 4rem;
+  margin-bottom: 10rem;
+}
+
+.desktop-only {
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.mobile-only {
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+// Navigation
+
+.navbar .nav-link {
+  @media (min-width: 768px) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+// Dropdowns and buttons
+
+.dropdown-item .svg-inline--fa {
+  margin-right: .5rem;
+}
+
+.dropdown-item-danger {
+  a {
+    color: $danger !important;
+
+    &:active {
+      color: #fff !important;
+      background: $danger !important;
+    }
+  }
+}
+
+.btn .svg-inline--fa {
+  @media (min-width: 768px) {
+    margin-right: .25rem;
+  }
+}
+
+// Tables
+
+.table td {
+  vertical-align: middle;
+}
+
+// Forms
+
+
+.form {
+  .form-control-plaintext {
+    outline: none;
+    padding: 0.375rem 0;
+
+    &--bold {
+      font-weight: bold;
+    }
+  }
+
+  select.form-control-plaintext {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+
+    &::-ms-expand {
+      display: none;
+    }
+  }
+
+  .form-control-link {
+    display: block;
+    padding: 0.375rem 0;
+  }
+
+  fieldset {
+    padding: 0 1rem;
+    border: 1px solid #ddd;
+    border-radius: .5rem;
+    margin-bottom: 3rem;
+
+    .form-group {
+      margin-left: .5rem;
+      margin-right: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    legend {
+      width: auto;
+      padding: 0 .5rem
+    }
+
+    label {
+      font-weight: bold;
+    }
+  }
+}
+
+.prism-editor-wrapper {
+  pre {
+    border-radius: 0.25rem;
+    border: 1px solid #f5f2f0;
+    outline: 0;
+
+    &:focus {
+      @include form-control-focus();
+      background-color: #f5f2f0 !important;
+    }
+  }
+
+  &.is-invalid {
+    pre {
+      border: 1px solid $danger;
+
+      &:focus {
+        border-color: $danger;
+        box-shadow: 0 0 0 $input-focus-width rgba($danger, .25);
+      }
+    }
+
+    & ~ .invalid-feedback {
+      display: block;
+    }
+  }
+}
+
+.file {
+  margin-bottom: 4rem;
+
+  &:last-child {
+    margin-bottom: 2rem;
+  }
+
+  &-name {
+    display: flex;
+
+    .btn {
+      margin-left: .5rem;
+    }
+
+    .btn .svg-inline--fa {
+      margin-right: 0;
+    }
+  }
+
+  &-actions {
+    margin: 0 0.5rem 2rem 0.5rem;
+  }
+
+  .form-group:first-child {
+    margin-bottom: 0;
+  }
+
+  .invalid-feedback {
+    display: block;
+  }
+}
+
+// Extra styles
+
+.link-muted {
+  color: $gray-900;
+  text-decoration: underline;
+}

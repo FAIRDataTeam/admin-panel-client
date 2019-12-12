@@ -1,0 +1,14 @@
+.login {
+  .card {
+    max-width: 25rem;
+    margin: auto;
+
+    @media (min-width: 768px) {
+      margin-top: 4rem;
+    }
+  }
+
+  .card-header {
+    font-weight: bold;
+  }
+}

@@ -97,9 +97,3 @@ export default {
   }
 }
 </script>
-
-<style>
-#app {
-  padding-top: 80px;
-}
-</style>

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Status from '../../utils/Status'
 
 export default {
@@ -51,7 +52,8 @@ export default {
         this.data = this.sortData(response.data)
         this.status.setDone()
       } catch (error) {
-        this.status.setError(error.toString())
+        const msg = _.get(error, 'response.data.message', 'Unable to load data.')
+        this.status.setError(msg)
       }
     }
   }

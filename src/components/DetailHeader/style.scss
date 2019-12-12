@@ -1,0 +1,37 @@
+@import "../../scss/variables";
+
+.detail-header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 56px;
+  padding: 0.5rem 0;
+  background: white;
+  border-bottom: 1px solid $gray-300;
+  z-index: 5;
+
+
+  .btn-group {
+    padding: 0 !important;
+  }
+
+  strong {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .actions {
+    text-align: right;
+    white-space: nowrap;
+
+    & > .btn {
+      padding: .375rem 1rem;
+      margin-left: 1rem;
+    }
+
+    & > .btn-group {
+      margin-left: 1rem;
+    }
+  }
+}
