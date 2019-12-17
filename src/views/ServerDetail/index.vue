@@ -8,7 +8,7 @@
         v-if="editing"
         class="btn btn-outline-primary"
         :disabled="status.isPending()"
-        @click="submit"
+        @click="$refs.form.submit()"
       >
         <fa :icon="['far', 'save']" />
         <span class="desktop-only">
@@ -57,131 +57,38 @@
       no-loading
     />
 
-    <form
+    <server-form
       v-if="data"
-      class="form"
-      @submit.prevent="submit"
-    >
-      <fieldset>
-        <legend>General</legend>
-
-        <div class="form-group">
-          <label>Name</label>
-          <input
-            v-model.trim="$v.data.name.$model"
-            :class="{'is-invalid': $v.data.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
-            :readonly="!editing"
-          >
-          <p
-            v-if="!$v.data.name.required"
-            class="invalid-feedback"
-          >
-            Field is required
-          </p>
-        </div>
-
-        <div class="form-group">
-          <label>Hostname</label>
-          <input
-            v-model.trim="$v.data.hostname.$model"
-            :class="{'is-invalid': $v.data.hostname.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
-            :readonly="!editing"
-          >
-          <p
-            v-if="!$v.data.hostname.required"
-            class="invalid-feedback"
-          >
-            Field is required
-          </p>
-        </div>
-
-        <div class="form-group">
-          <label>Username</label>
-          <input
-            v-model.trim="$v.data.username.$model"
-            :class="{'is-invalid': $v.data.username.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
-            :readonly="!editing"
-          >
-          <p
-            v-if="!$v.data.username.required"
-            class="invalid-feedback"
-          >
-            Field is required
-          </p>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>SSH Keys</legend>
-
-        <div class="form-group">
-          <label>Private Key</label>
-          <textarea
-            v-model.trim="$v.data.privateKey.$model"
-            rows="10"
-            :class="{'is-invalid': $v.data.privateKey.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
-            :readonly="!editing"
-          />
-          <p
-            v-if="!$v.data.privateKey.required"
-            class="invalid-feedback"
-          >
-            Field is required
-          </p>
-        </div>
-
-        <div class="form-group">
-          <label>Public Key</label>
-          <textarea
-            v-model.trim="$v.data.publicKey.$model"
-            rows="5"
-            :class="{'is-invalid': $v.data.publicKey.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
-            :readonly="!editing"
-          />
-          <p
-            v-if="!$v.data.publicKey.required"
-            class="invalid-feedback"
-          >
-            Field is required
-          </p>
-        </div>
-      </fieldset>
-    </form>
+      ref="form"
+      :data="data"
+      :editing="editing"
+      :on-submit="submit"
+    />
   </div>
 </template>
 
 <script>
-import { validationMixin } from 'vuelidate'
-import { required } from 'vuelidate/lib/validators'
-
 import api from '../../api'
 import DetailHeader from '../../components/DetailHeader/index'
+import ServerForm from '../../components/ServerForm/index'
 import editableData from '../../mixins/detail/editableData'
 import fetchData from '../../mixins/detail/fetchData'
 import removeData from '../../mixins/detail/removeData'
 
 export default {
   name: 'ServerDetail',
+
   components: {
+    ServerForm,
     DetailHeader
   },
+
   mixins: [
-    validationMixin,
     fetchData,
     editableData,
     removeData
   ],
-  validations() {
-    return {
-      data: {
-        name: { required },
-        hostname: { required },
-        username: { required },
-        privateKey: { required },
-        publicKey: { required },
-      }
-    }
-  },
+
   methods: {
     getData: api.servers.getServer,
     putData: api.servers.putServer,

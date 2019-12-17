@@ -106,7 +106,7 @@
       no-loading
     />
 
-    <InstanceForm
+    <instance-form
       v-if="data"
       ref="form"
       :data="data"

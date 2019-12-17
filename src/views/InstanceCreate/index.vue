@@ -21,7 +21,7 @@
       :no-loading="ready"
     />
 
-    <InstanceForm
+    <instance-form
       v-if="ready"
       ref="form"
       :data="data"
