@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import moment from 'moment'
 import api from '../api'
 
 function awaitPipeline(uuid, doneCallback, errorCallback, tickCallback = null) {

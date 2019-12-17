@@ -21,12 +21,12 @@ export default {
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     createLink: {
       type: String,
-      default: null
-    }
-  }
+      default: null,
+    },
+  },
 }
 </script>

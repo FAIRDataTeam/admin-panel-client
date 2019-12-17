@@ -11,7 +11,11 @@
         <label>Name</label>
         <input
           v-model.trim="$v.data.name.$model"
-          :class="{'is-invalid': $v.data.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.name.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -56,7 +60,11 @@
         <label>Deploy</label>
         <input
           v-model.trim="$v.data.deployCommand.$model"
-          :class="{'is-invalid': $v.data.deployCommand.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.deployCommand.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -71,7 +79,11 @@
         <label>Dispose</label>
         <input
           v-model.trim="$v.data.disposeCommand.$model"
-          :class="{'is-invalid': $v.data.disposeCommand.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.disposeCommand.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -86,7 +98,11 @@
         <label>Pause</label>
         <input
           v-model.trim="$v.data.pauseCommand.$model"
-          :class="{'is-invalid': $v.data.pauseCommand.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.pauseCommand.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -115,7 +131,10 @@
           <div class="file-name">
             <input
               v-model.trim="v.name.$model"
-              :class="{'is-invalid':v.name.$error, 'form-control': editing, 'form-control-plaintext form-control-plaintext--bold': !editing}"
+              :class="{
+                'is-invalid':v.name.$error, 'form-control': editing,
+                'form-control-plaintext form-control-plaintext--bold': !editing,
+              }"
               :readonly="!editing"
             >
             <button
@@ -175,7 +194,7 @@ export default {
   name: 'ApplicationForm',
 
   components: {
-    PrismEditor
+    PrismEditor,
   },
   mixins: [
     validationMixin,
@@ -184,16 +203,16 @@ export default {
   props: {
     data: {
       type: Object,
-      required: true
+      required: true,
     },
     editing: {
       type: Boolean,
-      default: true
+      default: true,
     },
     onSubmit: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
 
   validations() {
@@ -212,27 +231,27 @@ export default {
             } catch (e) {
               return false
             }
-          }
+          },
         },
         templates: {
           $each: {
             name: {
               required,
               isUnique(value) {
-                return this.data.templates.filter(t => t.name === value).length === 1
-              }
+                return this.data.templates.filter((t) => t.name === value).length === 1
+              },
             },
-            content: {}
-          }
-        }
-      }
+            content: {},
+          },
+        },
+      },
     }
   },
   methods: {
     addTemplate() {
       this.data.templates.push({
         name: 'file',
-        content: ''
+        content: '',
       })
     },
 
@@ -257,7 +276,7 @@ export default {
       if (!this.$v.data.$invalid) {
         this.onSubmit()
       }
-    }
-  }
+    },
+  },
 }
 </script>

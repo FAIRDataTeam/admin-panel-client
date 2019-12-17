@@ -34,9 +34,9 @@
 
 <script>
 import axios from 'axios'
-import DetailHeader from '../../components/DetailHeader/index'
+import DetailHeader from '../../components/DetailHeader'
 import api from '../../api'
-import InstanceForm from '../../components/InstanceForm/index'
+import InstanceForm from '../../components/InstanceForm'
 import Status from '../../utils/Status'
 
 export default {
@@ -58,19 +58,19 @@ export default {
         path: '',
         applicationUuid: '',
         serverUuid: '',
-        variables: {}
-      }
+        variables: {},
+      },
     }
   },
 
   computed: {
     ready() {
       return !!(this.servers && this.applications)
-    }
+    },
   },
 
   watch: {
-    '$route': 'fetchData'
+    $route: 'fetchData',
   },
 
   created() {
@@ -84,7 +84,7 @@ export default {
 
         const requests = [
           api.servers.getServers(),
-          api.applications.getApplications()
+          api.applications.getApplications(),
         ]
         const [servers, applications] = await axios.all(requests)
         this.servers = servers.data
@@ -93,7 +93,7 @@ export default {
       } catch (error) {
         this.status.setError('Unable to load applications and/or servers data.')
       }
-    }
+    },
   },
 
   async submit() {
@@ -104,6 +104,6 @@ export default {
     } catch (error) {
       this.status.setError('Unable to create a new application.')
     }
-  }
+  },
 }
 </script>

@@ -52,7 +52,7 @@
           {{ pipeline.duration | formatDuration }}
         </td>
         <td class="text-center">
-          <PipelineStatus :status="pipeline.status" />
+          <pipeline-status :status="pipeline.status" />
         </td>
         <td class="text-right">
           <b-dropdown
@@ -90,20 +90,22 @@
 import _ from 'lodash'
 import moment from 'moment'
 import api from '../../api'
-import InlineLoader from '../../components/InlineLoader/index'
-import ListHeader from '../../components/ListHeader/index'
-import ListTable from '../../components/ListTable/index'
-import PipelineStatus from '../../components/PipelineStatus/index'
+import InlineLoader from '../../components/InlineLoader'
+import ListHeader from '../../components/ListHeader'
+import ListTable from '../../components/ListTable'
+import PipelineStatus from '../../components/PipelineStatus'
 import fetchData from '../../mixins/list/fetchData'
 import removeData from '../../mixins/list/removeData'
 import pipelines from '../../utils/pipelines'
 
 export default {
   name: 'PipelinesList',
-  components: { InlineLoader, PipelineStatus, ListTable, ListHeader },
+  components: {
+    InlineLoader, PipelineStatus, ListTable, ListHeader,
+  },
   mixins: [
     fetchData,
-    removeData
+    removeData,
   ],
   methods: {
     getData: api.pipelines.getPipelines,
@@ -123,7 +125,7 @@ export default {
           this.status.setError('Unable to remove all pipelines.')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>

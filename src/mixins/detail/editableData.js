@@ -3,15 +3,11 @@ export default {
 
   data() {
     return {
-      editing: false
+      editing: false,
     }
   },
 
   methods: {
-    putData(data) {
-      // implemented in component that uses this mixin
-    },
-
     edit() {
       this.editing = true
     },
@@ -31,6 +27,6 @@ export default {
       } catch (error) {
         this.status.setError(`Unable to save ${this.dataName}.`)
       }
-    }
-  }
+    },
+  },
 }

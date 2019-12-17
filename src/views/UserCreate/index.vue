@@ -104,14 +104,14 @@
 import { validationMixin } from 'vuelidate'
 import { required, email } from 'vuelidate/src/validators'
 import api from '../../api'
-import DetailHeader from '../../components/DetailHeader/index'
+import DetailHeader from '../../components/DetailHeader'
 import Status from '../../utils/Status'
 
 export default {
   name: 'UserCreate',
 
   components: {
-    DetailHeader
+    DetailHeader,
   },
 
   mixins: [validationMixin],
@@ -125,9 +125,9 @@ export default {
         passwordCheck: {
           passwordMatch(value) {
             return this.user.password === value
-          }
-        }
-      }
+          },
+        },
+      },
     }
   },
 
@@ -137,9 +137,9 @@ export default {
         name: '',
         email: '',
         password: '',
-        passwordCheck: ''
+        passwordCheck: '',
       },
-      status: new Status()
+      status: new Status(),
     }
   },
 
@@ -156,7 +156,7 @@ export default {
           this.status.setError('Unable to create a new user.')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>

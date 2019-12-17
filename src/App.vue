@@ -69,14 +69,14 @@ export default {
 
   data() {
     return {
-      title: window.config.title
+      title: window.config.title,
     }
   },
 
   computed: {
     ...mapGetters('auth', {
-      authenticated: 'authenticated'
-    })
+      authenticated: 'authenticated',
+    }),
   },
 
   mounted() {
@@ -93,7 +93,7 @@ export default {
     logout() {
       this.$store.dispatch('auth/logout')
       this.$router.push('/login')
-    }
-  }
+    },
+  },
 }
 </script>

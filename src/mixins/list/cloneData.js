@@ -3,10 +3,6 @@ export default {
   name: 'cloneData',
 
   methods: {
-    cloneData(data) {
-      // implemented in component that uses this mixin
-    },
-
     async makeCopy(data) {
       try {
         this.addLoading(data.uuid)
@@ -18,6 +14,6 @@ export default {
       } finally {
         this.removeLoading(data.uuid)
       }
-    }
-  }
+    },
+  },
 }

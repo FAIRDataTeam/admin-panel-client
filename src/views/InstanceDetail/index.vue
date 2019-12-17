@@ -119,12 +119,12 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import axios from 'axios'
-import DetailHeader from '../../components/DetailHeader/index'
-
+import DetailHeader from '../../components/DetailHeader'
 import api from '../../api'
-import InstanceForm from '../../components/InstanceForm/index'
-import InstanceStatus from '../../components/InstanceStatus/index'
+import InstanceForm from '../../components/InstanceForm'
+import InstanceStatus from '../../components/InstanceStatus'
 import cloneData from '../../mixins/detail/cloneData'
 import editableData from '../../mixins/detail/editableData'
 import fetchData from '../../mixins/detail/fetchData'
@@ -145,7 +145,7 @@ export default {
     fetchData,
     editableData,
     removeData,
-    cloneData
+    cloneData,
   ],
 
   data() {
@@ -159,7 +159,7 @@ export default {
   computed: {
     anyPending() {
       return this.status.isPending() || this.deployStatus.isPending()
-    }
+    },
   },
 
   methods: {
@@ -168,7 +168,7 @@ export default {
     deleteData: api.instances.deleteInstance,
     cloneData: api.instances.cloneInstance,
     removeRedirectLocation: () => '/instances',
-    cloneRedirectLocation: id => `/instances/${id}`,
+    cloneRedirectLocation: (id) => `/instances/${id}`,
 
     async fetchData() {
       try {
@@ -176,7 +176,7 @@ export default {
         const requests = [
           api.instances.getInstance(this.$route.params.id),
           api.servers.getServers(),
-          api.applications.getApplications()
+          api.applications.getApplications(),
         ]
         const [data, servers, applications] = await axios.all(requests)
         this.data = data.data
@@ -250,7 +250,7 @@ export default {
           this.status.setError('Pause failed.')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>

@@ -22,5 +22,5 @@ library.add([
   fas.faPowerOff,
   fas.faSignOutAlt,
   fas.faSpinner,
-  fas.faSyncAlt
+  fas.faSyncAlt,
 ])

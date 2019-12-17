@@ -65,9 +65,9 @@
 </template>
 <script>
 import api from '../../api'
-import InlineLoader from '../../components/InlineLoader/index'
-import ListHeader from '../../components/ListHeader/index'
-import ListTable from '../../components/ListTable/index'
+import InlineLoader from '../../components/InlineLoader'
+import ListHeader from '../../components/ListHeader'
+import ListTable from '../../components/ListTable'
 import cloneData from '../../mixins/list/cloneData'
 import fetchData from '../../mixins/list/fetchData'
 import removeData from '../../mixins/list/removeData'
@@ -77,17 +77,17 @@ export default {
   components: {
     InlineLoader,
     ListHeader,
-    ListTable
+    ListTable,
   },
   mixins: [
     fetchData,
     removeData,
-    cloneData
+    cloneData,
   ],
   methods: {
     getData: api.applications.getApplications,
     deleteData: api.applications.deleteApplication,
-    cloneData: api.applications.cloneApplication
-  }
+    cloneData: api.applications.cloneApplication,
+  },
 }
 </script>

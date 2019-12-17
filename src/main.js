@@ -8,8 +8,8 @@ import 'prismjs/components/prism-scss'
 import 'prismjs/components/prism-yaml'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './scss/main.scss'
-import App from './App.vue'
-import StatusFlash from './components/StatusFlash/index'
+import App from './App'
+import StatusFlash from './components/StatusFlash'
 import router from './router'
 import store from './store'
 import './initFontAwesome'
@@ -29,5 +29,5 @@ document.title = window.config.title
 new Vue({
   router,
   store,
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app')

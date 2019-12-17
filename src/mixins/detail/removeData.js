@@ -2,14 +2,6 @@ export default {
   name: 'removeData',
 
   methods: {
-    removeRedirectLocation() {
-      // implemented in component that uses this mixin
-    },
-
-    deleteData(data) {
-      // implemented in component that uses this mixin
-    },
-
     async remove() {
       if (window.confirm(`Are you sure you want to delete ${this.getName(this.data)}?`)) {
         try {
@@ -20,6 +12,6 @@ export default {
           this.status.setError(`Unable to delete ${this.getName(this.data)}`)
         }
       }
-    }
-  }
+    },
+  },
 }

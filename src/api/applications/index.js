@@ -23,5 +23,5 @@ export default {
 
   cloneApplication(application) {
     return request.post(`/applications?source=${application.uuid}`, null)
-  }
+  },
 }

@@ -3,10 +3,6 @@ export default {
   name: 'removeData',
 
   methods: {
-    deleteData(data) {
-      // implemented in component that uses this mixin
-    },
-
     async remove(data) {
       if (window.confirm(`Are you sure you want to delete ${this.getName(data)}?`)) {
         try {
@@ -20,6 +16,6 @@ export default {
           this.removeLoading(data.uuid)
         }
       }
-    }
-  }
+    },
+  },
 }

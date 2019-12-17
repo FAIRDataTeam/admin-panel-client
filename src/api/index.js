@@ -11,5 +11,5 @@ export default {
   pipelines,
   servers,
   tokens,
-  users
+  users,
 }

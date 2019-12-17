@@ -53,8 +53,8 @@ export default {
 
   computed: {
     ...mapState('auth', {
-      status: 'loginStatus'
-    })
+      status: 'loginStatus',
+    }),
   },
 
   methods: {
@@ -64,9 +64,9 @@ export default {
       this.$store.dispatch('auth/authenticate', {
         email: this.email,
         password: this.password,
-        successCallback: () => this.$router.push('/')
+        successCallback: () => this.$router.push('/'),
       })
-    }
-  }
+    },
+  },
 }
 </script>

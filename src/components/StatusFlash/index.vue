@@ -28,12 +28,12 @@ export default {
   props: {
     status: {
       type: Status,
-      required: true
+      required: true,
     },
     noLoading: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 }
 </script>

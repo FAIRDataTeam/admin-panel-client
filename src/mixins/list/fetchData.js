@@ -13,7 +13,7 @@ export default {
   },
 
   watch: {
-    '$route': 'fetchData'
+    $route: 'fetchData',
   },
 
   created() {
@@ -21,10 +21,6 @@ export default {
   },
 
   methods: {
-    getData() {
-      // implemented in component that uses this mixin
-    },
-
     sortData(data) {
       return data
     },
@@ -34,7 +30,7 @@ export default {
     },
 
     isLoading(uuid) {
-      return this.uuidsLoading.filter(u => u === uuid).length > 0
+      return this.uuidsLoading.filter((u) => u === uuid).length > 0
     },
 
     addLoading(uuid) {
@@ -42,7 +38,7 @@ export default {
     },
 
     removeLoading(uuid) {
-      this.uuidsLoading =this.uuidsLoading.filter(u => u !== uuid)
+      this.uuidsLoading = this.uuidsLoading.filter((u) => u !== uuid)
     },
 
     async fetchData() {
@@ -55,6 +51,6 @@ export default {
         const msg = _.get(error, 'response.data.message', 'Unable to load data.')
         this.status.setError(msg)
       }
-    }
-  }
+    },
+  },
 }

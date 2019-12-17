@@ -11,7 +11,11 @@
         <label>Name</label>
         <input
           v-model.trim="$v.data.name.$model"
-          :class="{'is-invalid': $v.data.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.name.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -26,7 +30,11 @@
         <label>Hostname</label>
         <input
           v-model.trim="$v.data.hostname.$model"
-          :class="{'is-invalid': $v.data.hostname.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.hostname.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -41,7 +49,11 @@
         <label>Username</label>
         <input
           v-model.trim="$v.data.username.$model"
-          :class="{'is-invalid': $v.data.username.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.username.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -61,7 +73,11 @@
         <textarea
           v-model.trim="$v.data.privateKey.$model"
           rows="10"
-          :class="{'is-invalid': $v.data.privateKey.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.privateKey.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         />
         <p
@@ -77,7 +93,11 @@
         <textarea
           v-model.trim="$v.data.publicKey.$model"
           rows="5"
-          :class="{'is-invalid': $v.data.publicKey.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.publicKey.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         />
         <p
@@ -104,16 +124,16 @@ export default {
   props: {
     data: {
       type: Object,
-      required: true
+      required: true,
     },
     editing: {
       type: Boolean,
-      default: true
+      default: true,
     },
     onSubmit: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
 
   validations() {
@@ -124,7 +144,7 @@ export default {
         username: { required },
         privateKey: { required },
         publicKey: { required },
-      }
+      },
     }
   },
 
@@ -135,7 +155,7 @@ export default {
       if (!this.$v.data.$invalid) {
         this.onSubmit()
       }
-    }
-  }
+    },
+  },
 }
 </script>

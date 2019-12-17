@@ -28,8 +28,8 @@
 
 <script>
 import api from '../../api'
-import DetailHeader from '../../components/DetailHeader/index'
-import ServerForm from '../../components/ServerForm/index'
+import DetailHeader from '../../components/DetailHeader'
+import ServerForm from '../../components/ServerForm'
 import Status from '../../utils/Status'
 
 export default {
@@ -37,7 +37,7 @@ export default {
 
   components: {
     ServerForm,
-    DetailHeader
+    DetailHeader,
   },
 
   data() {
@@ -47,7 +47,7 @@ export default {
         hostname: '',
         username: '',
         privateKey: '',
-        publicKey: ''
+        publicKey: '',
       },
       status: new Status(),
     }
@@ -55,14 +55,14 @@ export default {
 
   methods: {
     async submit() {
-        try {
-          this.status.setPending()
-          const response = await api.servers.postServer(this.data)
-          await this.$router.replace(`/servers/${response.data.uuid}`)
-        } catch (error) {
-          this.status.setError('Unable to create a new server.')
-        }
+      try {
+        this.status.setPending()
+        const response = await api.servers.postServer(this.data)
+        await this.$router.replace(`/servers/${response.data.uuid}`)
+      } catch (error) {
+        this.status.setError('Unable to create a new server.')
       }
-  }
+    },
+  },
 }
 </script>

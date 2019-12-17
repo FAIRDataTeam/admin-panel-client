@@ -6,6 +6,6 @@
 </template>
 <script>
 export default {
-  name: 'InlineLoader'
+  name: 'InlineLoader',
 }
 </script>

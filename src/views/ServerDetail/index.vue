@@ -69,8 +69,8 @@
 
 <script>
 import api from '../../api'
-import DetailHeader from '../../components/DetailHeader/index'
-import ServerForm from '../../components/ServerForm/index'
+import DetailHeader from '../../components/DetailHeader'
+import ServerForm from '../../components/ServerForm'
 import editableData from '../../mixins/detail/editableData'
 import fetchData from '../../mixins/detail/fetchData'
 import removeData from '../../mixins/detail/removeData'
@@ -80,13 +80,13 @@ export default {
 
   components: {
     ServerForm,
-    DetailHeader
+    DetailHeader,
   },
 
   mixins: [
     fetchData,
     editableData,
-    removeData
+    removeData,
   ],
 
   methods: {
@@ -94,6 +94,6 @@ export default {
     putData: api.servers.putServer,
     deleteData: api.servers.deleteServer,
     removeRedirectLocation: () => '/servers',
-  }
+  },
 }
 </script>

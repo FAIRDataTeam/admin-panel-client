@@ -23,5 +23,5 @@ export default {
 
   putUserPassword(user, password) {
     return request.put(`/users/${user.uuid}/password`, { password })
-  }
+  },
 }

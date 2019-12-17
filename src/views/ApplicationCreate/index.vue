@@ -27,8 +27,8 @@
 
 <script>
 import api from '../../api'
-import ApplicationForm from '../../components/ApplicationForm/index'
-import DetailHeader from '../../components/DetailHeader/index'
+import ApplicationForm from '../../components/ApplicationForm'
+import DetailHeader from '../../components/DetailHeader'
 import Status from '../../utils/Status'
 
 export default {
@@ -47,9 +47,9 @@ export default {
         deployCommand: '',
         disposeCommand: '',
         pauseCommand: '',
-        templates: []
+        templates: [],
       },
-      status: new Status()
+      status: new Status(),
     }
   },
 
@@ -62,7 +62,7 @@ export default {
       } catch (error) {
         this.status.setError('Unable to create a new application.')
       }
-    }
-  }
+    },
+  },
 }
 </script>

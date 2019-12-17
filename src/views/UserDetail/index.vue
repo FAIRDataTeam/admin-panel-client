@@ -99,7 +99,11 @@
           <label>Name</label>
           <input
             v-model.trim="$v.data.name.$model"
-            :class="{'is-invalid': $v.data.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            :class="{
+              'is-invalid': $v.data.name.$error,
+              'form-control': editing,
+              'form-control-plaintext': !editing,
+            }"
             :readonly="!editing"
           >
           <p
@@ -114,7 +118,11 @@
           <label>Email</label>
           <input
             v-model.trim="$v.data.email.$model"
-            :class="{'is-invalid': $v.data.email.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            :class="{
+              'is-invalid': $v.data.email.$error,
+              'form-control': editing,
+              'form-control-plaintext': !editing,
+            }"
             :readonly="!editing"
           >
           <p
@@ -179,7 +187,7 @@
 <script>
 import { required, email } from 'vuelidate/lib/validators'
 import api from '../../api'
-import DetailHeader from '../../components/DetailHeader/index'
+import DetailHeader from '../../components/DetailHeader'
 import editableData from '../../mixins/detail/editableData'
 import fetchData from '../../mixins/detail/fetchData'
 import removeData from '../../mixins/detail/removeData'
@@ -187,27 +195,27 @@ import removeData from '../../mixins/detail/removeData'
 export default {
   name: 'UserDetail',
   components: {
-    DetailHeader
+    DetailHeader,
   },
   mixins: [
     fetchData,
     editableData,
-    removeData
+    removeData,
   ],
   validations() {
     return {
       data: {
         name: { required },
-        email: { required, email }
+        email: { required, email },
       },
       passwordForm: {
         password: { required },
         passwordCheck: {
           passwordMatch(value) {
             return this.passwordForm.password === value
-          }
-        }
-      }
+          },
+        },
+      },
     }
   },
 
@@ -216,8 +224,8 @@ export default {
       editingPassword: false,
       passwordForm: {
         password: null,
-        passwordCheck: null
-      }
+        passwordCheck: null,
+      },
     }
   },
 
@@ -245,7 +253,7 @@ export default {
           this.status.setError('Unable to change password.')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>

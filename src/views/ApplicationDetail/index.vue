@@ -77,8 +77,8 @@
 
 <script>
 import api from '../../api'
-import ApplicationForm from '../../components/ApplicationForm/index'
-import DetailHeader from '../../components/DetailHeader/index'
+import ApplicationForm from '../../components/ApplicationForm'
+import DetailHeader from '../../components/DetailHeader'
 import cloneData from '../../mixins/detail/cloneData'
 import editableData from '../../mixins/detail/editableData'
 import fetchData from '../../mixins/detail/fetchData'
@@ -102,7 +102,7 @@ export default {
     deleteData: api.applications.deleteApplication,
     cloneData: api.applications.cloneApplication,
     removeRedirectLocation: () => '/applications',
-    cloneRedirectLocation: id => `/applications/${id}`,
-  }
+    cloneRedirectLocation: (id) => `/applications/${id}`,
+  },
 }
 </script>

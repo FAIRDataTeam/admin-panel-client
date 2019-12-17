@@ -88,10 +88,10 @@
 
 <script>
 import api from '../../api'
-import InstanceStatus from '../../components/InstanceStatus/index'
-import InlineLoader from '../../components/InlineLoader/index'
-import ListHeader from '../../components/ListHeader/index'
-import ListTable from '../../components/ListTable/index'
+import InstanceStatus from '../../components/InstanceStatus'
+import InlineLoader from '../../components/InlineLoader'
+import ListHeader from '../../components/ListHeader'
+import ListTable from '../../components/ListTable'
 import cloneData from '../../mixins/list/cloneData'
 import fetchData from '../../mixins/list/fetchData'
 import removeData from '../../mixins/list/removeData'
@@ -103,12 +103,12 @@ export default {
     InlineLoader,
     ListHeader,
     ListTable,
-    InstanceStatus
+    InstanceStatus,
   },
   mixins: [
     fetchData,
     removeData,
-    cloneData
+    cloneData,
   ],
   methods: {
     getData: api.instances.getInstances,
@@ -130,7 +130,7 @@ export default {
         this.status.setError('Deploy failed.')
         this.removeLoading(instance.uuid)
       }
-    }
-  }
+    },
+  },
 }
 </script>

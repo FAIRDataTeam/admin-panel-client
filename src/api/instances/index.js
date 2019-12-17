@@ -23,5 +23,5 @@ export default {
 
   cloneInstance(instance) {
     return request.post(`/instances?source=${instance.uuid}`, null)
-  }
+  },
 }

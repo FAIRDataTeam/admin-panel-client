@@ -2,14 +2,6 @@ export default {
   name: 'cloneData',
 
   methods: {
-    cloneData(data) {
-      // implemented in component that uses this mixin
-    },
-
-    cloneRedirectLocation(id) {
-      // implemented in component that uses this mixin
-    },
-
     async makeCopy() {
       try {
         this.status.setPending()
@@ -19,6 +11,6 @@ export default {
       } catch (error) {
         this.status.setError(`Unable to make a copy of ${this.data.name}.`)
       }
-    }
-  }
+    },
+  },
 }

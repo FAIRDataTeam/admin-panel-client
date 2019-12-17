@@ -36,15 +36,15 @@ export default {
 
   props: {
     data: {
-      validator: prop => Array.isArray(prop) || prop == null,
-      required: true
-    }
+      validator: (prop) => Array.isArray(prop) || prop == null,
+      required: true,
+    },
   },
 
   methods: {
     orderBy(list, prop) {
       return _.orderBy(list, prop)
-    }
-  }
+    },
+  },
 }
 </script>

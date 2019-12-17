@@ -19,5 +19,5 @@ export default {
 
   deleteServer(server) {
     return request.delete(`/servers/${server.uuid}`)
-  }
+  },
 }

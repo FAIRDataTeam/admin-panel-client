@@ -11,7 +11,11 @@
         <label>Name</label>
         <input
           v-model.trim="$v.data.name.$model"
-          :class="{'is-invalid': $v.data.name.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.name.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -26,7 +30,11 @@
         <label>URL</label>
         <input
           v-model.trim="$v.data.url.$model"
-          :class="{'is-invalid': $v.data.url.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.url.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -48,7 +56,11 @@
         <select
           v-if="editing"
           v-model="$v.data.applicationUuid.$model"
-          :class="{'is-invalid': $v.data.applicationUuid.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.applicationUuid.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :disabled="!editing"
           @change="sanitizeData"
         >
@@ -80,7 +92,11 @@
         <select
           v-if="editing"
           v-model="$v.data.serverUuid.$model"
-          :class="{'is-invalid': $v.data.serverUuid.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.serverUuid.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :disabled="!editing"
         >
           <option
@@ -110,7 +126,11 @@
         <label>Path</label>
         <input
           v-model.trim="$v.data.path.$model"
-          :class="{'is-invalid': $v.data.path.$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+          :class="{
+            'is-invalid': $v.data.path.$error,
+            'form-control': editing,
+            'form-control-plaintext': !editing,
+          }"
           :readonly="!editing"
         >
         <p
@@ -137,7 +157,11 @@
         <template v-if="field.type === 'string'">
           <input
             v-model.trim="$v.data.variables[field.key].$model"
-            :class="{'is-invalid': $v.data.variables[field.key].$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            :class="{
+              'is-invalid': $v.data.variables[field.key].$error,
+              'form-control': editing,
+              'form-control-plaintext': !editing,
+            }"
             :readonly="!editing"
           >
         </template>
@@ -152,7 +176,11 @@
         <template v-else-if="field.type === 'options'">
           <select
             v-model="$v.data.variables[field.key].$model"
-            :class="{'is-invalid': $v.data.variables[field.key].$error, 'form-control': editing, 'form-control-plaintext': !editing}"
+            :class="{
+              'is-invalid': $v.data.variables[field.key].$error,
+              'form-control': editing,
+              'form-control-plaintext': !editing,
+            }"
             :disabled="!editing"
           >
             <option
@@ -183,39 +211,39 @@ export default {
   name: 'InstanceForm',
 
   components: {
-    PrismEditor
+    PrismEditor,
   },
 
   mixins: [
-    validationMixin
+    validationMixin,
   ],
 
   props: {
     data: {
       type: Object,
-      required: true
+      required: true,
     },
     applications: {
       type: Array,
-      required: true
+      required: true,
     },
     servers: {
       type: Array,
-      required: true
+      required: true,
     },
     editing: {
       type: Boolean,
-      default: true
+      default: true,
     },
     onSubmit: {
       type: Function,
-      required: true
-    }
+      required: true,
+    },
   },
 
   computed: {
     selectedApplication() {
-      return this.applications.filter(a => a.uuid === this.data.applicationUuid)[0]
+      return this.applications.filter((a) => a.uuid === this.data.applicationUuid)[0]
     },
     selectedSpecSections() {
       try {
@@ -226,10 +254,10 @@ export default {
       }
     },
     selectedSpecFields() {
-      return this.selectedSpecSections.flatMap(section => section.fields)
+      return this.selectedSpecSections.flatMap((section) => section.fields)
     },
     selectedServer() {
-      return this.servers.filter(s => s.uuid === this.data.serverUuid)[0]
+      return this.servers.filter((s) => s.uuid === this.data.serverUuid)[0]
     },
   },
 
@@ -245,9 +273,9 @@ export default {
       return {}
     }
 
-    const variables = this.selectedSpecFields.reduce((acc, field) => {
-      return { ...acc, [field.key]: variableValidation(field) }
-    }, {})
+    const variables = this.selectedSpecFields.reduce((acc, field) => ({
+      ...acc, [field.key]: variableValidation(field),
+    }), {})
 
     return {
       data: {
@@ -256,8 +284,8 @@ export default {
         path: { required },
         applicationUuid: { required },
         serverUuid: { required },
-        variables
-      }
+        variables,
+      },
     }
   },
 
@@ -281,8 +309,8 @@ export default {
       if (!this.$v.data.$invalid) {
         this.onSubmit()
       }
-    }
-  }
+    },
+  },
 
 }
 </script>

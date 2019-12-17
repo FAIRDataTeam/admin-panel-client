@@ -11,8 +11,8 @@ export default {
   },
 
   getters: {
-    authenticated: state => state.token !== null,
-    token: state => state.token
+    authenticated: (state) => state.token !== null,
+    token: (state) => state.token,
   },
 
   actions: {
@@ -21,7 +21,7 @@ export default {
         commit('setLoginStatus', { status: Status.PENDING })
         const response = await api.tokens.fetchToken(email, password)
         commit('setLoginStatus', { status: Status.DEFAULT })
-        const token = response.data.token
+        const { token } = response.data
         commit('setToken', token)
         localStorage.setUserToken(token)
         successCallback()
@@ -34,7 +34,7 @@ export default {
     logout({ commit }) {
       localStorage.clearUserToken()
       commit('setToken', null)
-    }
+    },
   },
 
   mutations: {
@@ -43,6 +43,6 @@ export default {
     },
     setLoginStatus(state, { status, msg }) {
       state.loginStatus.setStatus(status, msg)
-    }
-  }
+    },
+  },
 }

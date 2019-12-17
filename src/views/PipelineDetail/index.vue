@@ -4,7 +4,7 @@
       v-if="data"
       :title="pipelineTitle(data)"
     >
-      <PipelineStatus :status="data.status" />
+      <pipeline-status :status="data.status" />
       <b-dropdown
         right
         variant="outline-secondary"
@@ -47,10 +47,11 @@
   </div>
 </template>
 <script>
-import api from '../../api'
-import DetailHeader from '../../components/DetailHeader/index'
-import PipelineStatus from '../../components/PipelineStatus/index'
+import _ from 'lodash'
 import PrismEditor from 'vue-prism-editor'
+import api from '../../api'
+import DetailHeader from '../../components/DetailHeader'
+import PipelineStatus from '../../components/PipelineStatus'
 import fetchData from '../../mixins/detail/fetchData'
 import removeData from '../../mixins/detail/removeData'
 import pipelines from '../../utils/pipelines'
@@ -86,12 +87,11 @@ export default {
             this.data = data
           })
         }
-
       } catch (error) {
         const msg = _.get(error, 'response.data.message', 'Unable to load data.')
         this.status.setError(msg)
       }
-    }
-  }
+    },
+  },
 }
 </script>

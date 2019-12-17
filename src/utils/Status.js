@@ -1,3 +1,6 @@
+import _ from 'lodash'
+
+
 const PENDING = 'LOADING'
 const ERROR = 'ERROR'
 const SUCCESS = 'SUCCESS'
@@ -23,7 +26,7 @@ export default class Status {
   }
 
   isDefault() {
-    return this.status === DEFAULT;
+    return this.status === DEFAULT
   }
 
   isError() {

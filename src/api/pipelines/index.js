@@ -4,21 +4,21 @@ export default {
   deployInstance(instance) {
     return request.post('/pipelines', {
       type: 'DEPLOY',
-      instanceUuid: instance.uuid
+      instanceUuid: instance.uuid,
     })
   },
 
   disposeInstance(instance) {
     return request.post('/pipelines', {
       type: 'DISPOSE',
-      instanceUuid: instance.uuid
+      instanceUuid: instance.uuid,
     })
   },
 
   pauseInstance(instance) {
     return request.post('/pipelines', {
       type: 'PAUSE',
-      instanceUuid: instance.uuid
+      instanceUuid: instance.uuid,
     })
   },
 
@@ -35,6 +35,6 @@ export default {
   },
 
   deleteAllPipelines() {
-    return request.delete(`/pipelines`)
-  }
+    return request.delete('/pipelines')
+  },
 }

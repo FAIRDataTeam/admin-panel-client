@@ -1,21 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import ApplicationCreate from '../views/ApplicationCreate/index'
-import ApplicationDetail from '../views/ApplicationDetail/index'
-import ApplicationList from '../views/ApplicationList/index'
-import InstanceList from '../views/InstanceList/index.vue'
-import InstanceDetail from '../views/InstanceDetail/index.vue'
-import InstanceCreate from '../views/InstanceCreate/index.vue'
-import Login from '../views/Login/index.vue'
-import NotFound from '../views/NotFound/index.vue'
-import PipelineDetail from '../views/PipelineDetail/index'
-import PipelineList from '../views/PipelineList/index'
-import ServerDetail from '../views/ServerDetail/index.vue'
-import ServerCreate from '../views/ServerCreate/index.vue'
-import ServerList from '../views/ServerList/index.vue'
-import UserCreate from '../views/UserCreate/index'
-import UserDetail from '../views/UserDetail/index'
-import UserList from '../views/UserList/index'
+import ApplicationCreate from '../views/ApplicationCreate'
+import ApplicationDetail from '../views/ApplicationDetail'
+import ApplicationList from '../views/ApplicationList'
+import InstanceList from '../views/InstanceList'
+import InstanceDetail from '../views/InstanceDetail'
+import InstanceCreate from '../views/InstanceCreate'
+import Login from '../views/Login'
+import NotFound from '../views/NotFound'
+import PipelineDetail from '../views/PipelineDetail'
+import PipelineList from '../views/PipelineList'
+import ServerDetail from '../views/ServerDetail'
+import ServerCreate from '../views/ServerCreate'
+import ServerList from '../views/ServerList'
+import UserCreate from '../views/UserCreate'
+import UserDetail from '../views/UserDetail'
+import UserList from '../views/UserList'
 
 Vue.use(VueRouter)
 
@@ -36,7 +36,7 @@ const routes = [
   { path: '/users', component: UserList },
   { path: '/users/create', component: UserCreate },
   { path: '/users/:id', component: UserDetail },
-  { path: '*', component: NotFound }
+  { path: '*', component: NotFound },
 ]
 
 const router = new VueRouter({
